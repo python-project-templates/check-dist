@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import fnmatch
 import os
+import re
 import subprocess
 import sys
 import tarfile
 import tempfile
 import zipfile
 from pathlib import Path
+
+import yaml
 
 if sys.version_info >= (3, 11):
     import tomllib
@@ -65,20 +68,42 @@ def _wrong_platform_extensions() -> list[str]:
     return list(mapping.keys())
 
 
-def load_config(pyproject_path: str | Path = "pyproject.toml") -> dict:
-    """Load ``[tool.check-dist]`` configuration from *pyproject.toml*."""
+def load_config(pyproject_path: str | Path = "pyproject.toml", *, source_dir: str | Path | None = None) -> dict:
+    """Load ``[tool.check-dist]`` configuration from *pyproject.toml*.
+
+    If no ``[tool.check-dist]`` section exists and *source_dir* contains a
+    ``.copier-answers.yaml`` with an ``add_extension`` key, sensible
+    defaults are derived from the copier template answers.
+    """
     path = Path(pyproject_path)
+    empty = {
+        "sdist": {"present": [], "absent": []},
+        "wheel": {"present": [], "absent": []},
+    }
     if not path.exists():
-        return {
-            "all": {"present": [], "absent": []},
-            "sdist": {"present": [], "absent": []},
-            "wheel": {"present": [], "absent": []},
-        }
+        # No pyproject.toml at all — try copier defaults
+        if source_dir is not None:
+            copier_cfg = load_copier_config(source_dir)
+            defaults = copier_defaults(copier_cfg)
+            if defaults is not None:
+                return defaults
+        return empty
 
     with open(path, "rb") as f:
         config = tomllib.load(f)
 
     cd = config.get("tool", {}).get("check-dist", {})
+
+    # If there's no [tool.check-dist] section at all, try copier defaults
+    if not cd:
+        if source_dir is None:
+            source_dir = path.parent
+        copier_cfg = load_copier_config(source_dir)
+        defaults = copier_defaults(copier_cfg)
+        if defaults is not None:
+            return defaults
+        return empty
+
     base_present = cd.get("present", [])
     base_absent = cd.get("absent", [])
     sdist_cfg = cd.get("sdist", {})
@@ -106,6 +131,118 @@ def load_hatch_config(pyproject_path: str | Path = "pyproject.toml") -> dict:
         config = tomllib.load(f)
 
     return config.get("tool", {}).get("hatch", {}).get("build", {})
+
+
+# ── Copier template defaults ─────────────────────────────────────────
+
+# Per-extension type defaults for sdist/wheel present/absent patterns.
+# Keys follow the ``add_extension`` value in ``.copier-answers.yaml``.
+_EXTENSION_DEFAULTS: dict[str, dict] = {
+    "cpp": {
+        "sdist_present_extra": ["cpp"],
+        "sdist_absent_extra": [".clang-format"],
+        "wheel_absent_extra": ["cpp"],
+    },
+    "rust": {
+        "sdist_present_extra": ["rust", "src", "Cargo.toml", "Cargo.lock"],
+        "sdist_absent_extra": [".gitattributes", "target"],
+        "wheel_absent_extra": ["rust", "src", "Cargo.toml"],
+    },
+    "js": {
+        "sdist_present_extra": ["js"],
+        "sdist_absent_extra": [".gitattributes", ".vscode"],
+        "wheel_absent_extra": ["js"],
+    },
+    "jupyter": {
+        "sdist_present_extra": ["js"],
+        "sdist_absent_extra": [".gitattributes", ".vscode"],
+        "wheel_absent_extra": ["js"],
+    },
+    "rustjswasm": {
+        "sdist_present_extra": ["js", "rust", "src", "Cargo.toml", "Cargo.lock"],
+        "sdist_absent_extra": [".gitattributes", ".vscode", "target"],
+        "wheel_absent_extra": ["js", "rust", "src", "Cargo.toml"],
+    },
+    "cppjswasm": {
+        "sdist_present_extra": ["cpp", "js"],
+        "sdist_absent_extra": [".clang-format", ".vscode"],
+        "wheel_absent_extra": ["js", "cpp"],
+    },
+    "python": {
+        "sdist_present_extra": [],
+        "sdist_absent_extra": [],
+        "wheel_absent_extra": [],
+    },
+}
+
+# Common patterns shared across all extension types.
+_COMMON_SDIST_PRESENT = ["LICENSE", "pyproject.toml", "README.md"]
+_COMMON_SDIST_ABSENT = [
+    ".copier-answers.yaml",
+    "Makefile",
+    ".github",
+    "dist",
+    "docs",
+    "examples",
+    "tests",
+]
+_COMMON_WHEEL_ABSENT = [
+    ".gitignore",
+    ".copier-answers.yaml",
+    "Makefile",
+    "pyproject.toml",
+    ".github",
+    "dist",
+    "docs",
+    "examples",
+    "tests",
+]
+
+
+def load_copier_config(source_dir: str | Path) -> dict:
+    """Load ``.copier-answers.yaml`` from *source_dir*, if it exists."""
+    path = Path(source_dir) / ".copier-answers.yaml"
+    if not path.exists():
+        return {}
+    with open(path) as f:
+        return yaml.safe_load(f) or {}
+
+
+def _module_name_from_project(project_name: str) -> str:
+    """Convert a human project name to a Python module name.
+
+    Replaces spaces and hyphens with underscores.
+    """
+    return re.sub(r"[\s-]+", "_", project_name).strip("_")
+
+
+def copier_defaults(copier_config: dict) -> dict | None:
+    """Derive default check-dist config from copier answers.
+
+    Returns a config dict with the same shape as ``load_config`` output,
+    or ``None`` if deriving defaults is not possible (no ``add_extension``
+    key, or unknown extension type).
+    """
+    extension = copier_config.get("add_extension")
+    project_name = copier_config.get("project_name")
+    if not extension or not project_name:
+        return None
+
+    ext_defaults = _EXTENSION_DEFAULTS.get(extension)
+    if ext_defaults is None:
+        return None
+
+    module = _module_name_from_project(project_name)
+
+    sdist_present = [module, *ext_defaults.get("sdist_present_extra", []), *_COMMON_SDIST_PRESENT]
+    sdist_absent = [*_COMMON_SDIST_ABSENT, *ext_defaults.get("sdist_absent_extra", [])]
+    wheel_present = [module]
+    wheel_absent = [*_COMMON_WHEEL_ABSENT, *ext_defaults.get("wheel_absent_extra", [])]
+
+    return {
+        "sdist": {"present": sdist_present, "absent": sdist_absent},
+        "wheel": {"present": wheel_present, "absent": wheel_absent},
+    }
 
 
 # ── Building ──────────────────────────────────────────────────────────
@@ -381,6 +518,7 @@ def check_sdist_vs_vcs(
     sdist_files: list[str],
     vcs_files: list[str],
     hatch_config: dict,
+    sdist_absent: list[str] | None = None,
 ) -> list[str]:
     """Compare sdist contents against VCS-tracked files."""
     errors: list[str] = []
@@ -404,11 +542,19 @@ def check_sdist_vs_vcs(
     missing = sorted(expected - sdist_set)
     # Filter common non-issues (dotfiles like .gitattributes)
     missing = [f for f in missing if not f.startswith(".")]
+    # Filter files that match the user's sdist absent patterns —
+    # if a file is explicitly expected to be absent, it's not "missing".
+    # Always include the common absent patterns (docs, tests, etc.) since
+    # most build systems exclude these from sdists.
+    all_absent = list(_COMMON_SDIST_ABSENT)
+    if sdist_absent:
+        all_absent.extend(sdist_absent)
+    missing = [f for f in missing if not any(matches_pattern(f, pat) for pat in all_absent)]
 
     if extra:
-        errors.append(f"sdist contains files not tracked by VCS: {', '.join(extra)}")
+        errors.append("\nsdist contains files not tracked by VCS:\n\t" + "\n\t".join(extra))
     if missing:
-        errors.append(f"VCS-tracked files missing from sdist: {', '.join(missing)}")
+        errors.append("\nVCS-tracked files missing from sdist: \n\t" + "\n\t".join(missing))
     return errors
 
 
@@ -444,7 +590,7 @@ def check_dist(
     source_dir = os.path.abspath(source_dir)
 
     pyproject_path = os.path.join(source_dir, "pyproject.toml")
-    config = load_config(pyproject_path)
+    config = load_config(pyproject_path, source_dir=source_dir)
     hatch_config = load_hatch_config(pyproject_path)
 
     if pre_built is not None:
@@ -483,7 +629,7 @@ def check_dist(
 
             try:
                 vcs_files = get_vcs_files(source_dir)
-                errors.extend(check_sdist_vs_vcs(sdist_files, vcs_files, hatch_config))
+                errors.extend(check_sdist_vs_vcs(sdist_files, vcs_files, hatch_config, sdist_absent=config["sdist"]["absent"]))
             except CheckDistError as exc:
                 messages.append(f"  Warning: could not compare against VCS: {exc}")
 

@@ -16,17 +16,20 @@ import pytest
 from check_dist._core import (
     CheckDistError,
     _matches_hatch_pattern,
+    _module_name_from_project,
     _sdist_expected_files,
     check_absent,
     check_dist,
     check_present,
     check_sdist_vs_vcs,
     check_wrong_platform_extensions,
+    copier_defaults,
     find_dist_files,
     get_vcs_files,
     list_sdist_files,
     list_wheel_files,
     load_config,
+    load_copier_config,
     load_hatch_config,
     matches_pattern,
     translate_extension,
@@ -422,6 +425,107 @@ class TestLoadHatchConfig:
         )
         cfg = load_hatch_config(toml)
         assert cfg["targets"]["sdist"]["packages"] == ["mylib"]
+
+
+# ── Copier defaults ──────────────────────────────────────────────────
+
+
+class TestModuleNameFromProject:
+    def test_spaces(self):
+        assert _module_name_from_project("python template js") == "python_template_js"
+
+    def test_hyphens(self):
+        assert _module_name_from_project("my-project") == "my_project"
+
+    def test_mixed(self):
+        assert _module_name_from_project("python template-rust") == "python_template_rust"
+
+    def test_no_change(self):
+        assert _module_name_from_project("mypkg") == "mypkg"
+
+
+class TestLoadCopierConfig:
+    def test_missing_file(self, tmp_path):
+        assert load_copier_config(tmp_path) == {}
+
+    def test_valid_file(self, tmp_path):
+        (tmp_path / ".copier-answers.yaml").write_text("add_extension: rust\nproject_name: my project\n")
+        cfg = load_copier_config(tmp_path)
+        assert cfg["add_extension"] == "rust"
+        assert cfg["project_name"] == "my project"
+
+
+class TestCopierDefaults:
+    def test_cpp(self):
+        cfg = copier_defaults({"add_extension": "cpp", "project_name": "python template cpp"})
+        assert cfg is not None
+        assert "python_template_cpp" in cfg["sdist"]["present"]
+        assert "cpp" in cfg["sdist"]["present"]
+        assert ".clang-format" in cfg["sdist"]["absent"]
+        assert "cpp" in cfg["wheel"]["absent"]
+
+    def test_rust(self):
+        cfg = copier_defaults({"add_extension": "rust", "project_name": "python template rust"})
+        assert cfg is not None
+        assert "Cargo.toml" in cfg["sdist"]["present"]
+        assert "rust" in cfg["sdist"]["present"]
+        assert "target" in cfg["sdist"]["absent"]
+
+    def test_js(self):
+        cfg = copier_defaults({"add_extension": "js", "project_name": "python template js"})
+        assert cfg is not None
+        assert "js" in cfg["sdist"]["present"]
+        assert "js" in cfg["wheel"]["absent"]
+
+    def test_unknown_extension(self):
+        assert copier_defaults({"add_extension": "unknown", "project_name": "foo"}) is None
+
+    def test_no_extension(self):
+        assert copier_defaults({"project_name": "foo"}) is None
+
+    def test_no_project_name(self):
+        assert copier_defaults({"add_extension": "cpp"}) is None
+
+    def test_common_patterns_present(self):
+        cfg = copier_defaults({"add_extension": "cpp", "project_name": "foo"})
+        assert "LICENSE" in cfg["sdist"]["present"]
+        assert "pyproject.toml" in cfg["sdist"]["present"]
+        assert ".copier-answers.yaml" in cfg["sdist"]["absent"]
+        assert ".github" in cfg["sdist"]["absent"]
+        assert ".gitignore" in cfg["wheel"]["absent"]
+        assert "pyproject.toml" in cfg["wheel"]["absent"]
+
+
+class TestLoadConfigWithCopierFallback:
+    def test_no_check_dist_section_uses_copier(self, tmp_path):
+        """When pyproject.toml has no [tool.check-dist], copier defaults apply."""
+        toml = tmp_path / "pyproject.toml"
+        toml.write_text("[project]\nname = 'foo'\n")
+        (tmp_path / ".copier-answers.yaml").write_text("add_extension: rust\nproject_name: my project\n")
+        cfg = load_config(toml, source_dir=tmp_path)
+        assert "my_project" in cfg["sdist"]["present"]
+        assert "rust" in cfg["sdist"]["present"]
+
+    def test_explicit_config_takes_precedence(self, tmp_path):
+        """When [tool.check-dist] exists, copier defaults are ignored."""
+        toml = tmp_path / "pyproject.toml"
+        toml.write_text(
+            textwrap.dedent("""\
+            [tool.check-dist.sdist]
+            present = ["custom"]
+        """)
+        )
+        (tmp_path / ".copier-answers.yaml").write_text("add_extension: rust\nproject_name: my project\n")
+        cfg = load_config(toml, source_dir=tmp_path)
+        assert cfg["sdist"]["present"] == ["custom"]
+        assert "rust" not in cfg["sdist"]["present"]
+
+    def test_no_copier_file_returns_empty(self, tmp_path):
+        toml = tmp_path / "pyproject.toml"
+        toml.write_text("[project]\nname = 'foo'\n")
+        cfg = load_config(toml, source_dir=tmp_path)
+        assert cfg["sdist"]["present"] == []
+        assert cfg["wheel"]["present"] == []
 
 
 # ── list_sdist_files ──────────────────────────────────────────────────

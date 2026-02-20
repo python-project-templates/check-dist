@@ -135,6 +135,29 @@ This tells `check-dist` that the sdist should contain files from the listed path
 
 > **Note:** Hatchling force-includes VCS exclusion files (e.g. `.gitignore`) in sdists regardless of exclude rules.  Do not add `.gitignore` to your `absent` list for sdist checks.
 
+## Copier template defaults
+
+If your project was scaffolded with a [Copier](https://copier.readthedocs.io/) template and has a `.copier-answers.yaml` file at the root, `check-dist` can derive sensible `present`/`absent` defaults automatically — **no `[tool.check-dist]` section required**.
+
+This works when the answers file contains both:
+
+- `project_name` — used to derive the Python module name (spaces and hyphens become underscores).
+- `add_extension` — the extension type added by the template.
+
+Supported extension types: `cpp`, `rust`, `js`, `jupyter`, `rustjswasm`, `cppjswasm`.
+
+For example, given:
+
+```yaml
+# .copier-answers.yaml
+project_name: python template rust
+add_extension: rust
+```
+
+`check-dist` will automatically check for `Cargo.toml`, `rust/`, `python_template_rust/`, etc., in the sdist, and ensure build artefacts like `target/` are absent.
+
+> An explicit `[tool.check-dist]` section in `pyproject.toml` always takes precedence over copier defaults. If you need to override or fine-tune the derived patterns, add your own configuration.
+
 ## CLI reference
 
 ```
@@ -188,7 +211,9 @@ for msg in messages:
 Key functions exposed from `check_dist`:
 
 - `check_dist(source_dir, *, no_isolation=False, verbose=False, pre_built=None)` — run all checks, returns `(bool, list[str])`.  Pass `pre_built="dist/"` to skip building.
-- `load_config(pyproject_path)` — load `[tool.check-dist]` configuration.
+- `load_config(pyproject_path, *, source_dir=None)` — load `[tool.check-dist]` configuration, falling back to copier defaults when `source_dir` is provided.
+- `load_copier_config(source_dir)` — load `.copier-answers.yaml` from a directory.
+- `copier_defaults(copier_config)` — derive `present`/`absent` patterns from copier answers.
 - `load_hatch_config(pyproject_path)` — load `[tool.hatch.build]` configuration.
 - `list_sdist_files(path)` — list files in an sdist archive.
 - `list_wheel_files(path)` — list files in a wheel archive.
