@@ -29,7 +29,9 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 
-dependencies = []
+dependencies = [
+    "pyyaml",
+]
 
 [project.optional-dependencies]
 develop = [
