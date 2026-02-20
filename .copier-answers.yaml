@@ -1,0 +1,12 @@
+# Changes here will be overwritten by Copier
+_commit: 7e5612d
+_src_path: https://github.com/python-project-templates/base.git
+add_docs: false
+add_extension: python
+add_wiki: false
+email: t.paine154@gmail.com
+github: python-project-templates
+project_description: Check Python source and wheel distributions
+project_name: check-dist
+python_version_primary: '3.11'
+team: the check-dist authors
