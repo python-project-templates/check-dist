@@ -46,12 +46,12 @@ format: fix
 ################
 # Other Checks #
 ################
-.PHONY: check-manifest checks check
+.PHONY: check-dist checks check
 
-check-manifest:  ## check python sdist manifest with check-manifest
-	check-manifest -v
+check-dist:  ## check python sdist with check-dist
+	check-dist -v
 
-checks: check-manifest
+checks: check-dist
 
 # Alias
 check: checks
