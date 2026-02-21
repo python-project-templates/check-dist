@@ -15,6 +15,8 @@ import pytest
 
 from check_dist._core import (
     CheckDistError,
+    _filter_extras_by_hatch,
+    _find_pre_built,
     _matches_hatch_pattern,
     _module_name_from_project,
     _sdist_expected_files,
@@ -329,34 +331,266 @@ class TestMatchesHatchPattern:
 
 
 class TestSdistExpectedFiles:
+    """Covers hatch semantics: packages, include, exclude, only-include,
+    force-include, sources, and their interactions."""
+
+    VCS = [
+        "pkg/__init__.py",
+        "pkg/core.py",
+        "rust/src/lib.rs",
+        "Cargo.toml",
+        "Cargo.lock",
+        "tests/test_pkg.py",
+        "docs/index.md",
+        "setup.py",
+        ".gitignore",
+        ".gitattributes",
+    ]
+
     def test_no_hatch_config(self):
-        vcs = ["a.py", "b.py", "pkg/c.py"]
-        result = _sdist_expected_files(vcs, {})
-        assert result == {"a.py", "b.py", "pkg/c.py"}
+        result = _sdist_expected_files(self.VCS, {})
+        assert result == set(self.VCS)
 
-    def test_with_packages(self):
-        vcs = ["pkg/__init__.py", "tests/test.py", "setup.py"]
-        hatch = {"targets": {"sdist": {"packages": ["pkg"]}}}
-        result = _sdist_expected_files(vcs, hatch)
-        assert "pkg/__init__.py" in result
-        assert "setup.py" not in result
-        assert "tests/test.py" not in result
+    # ── only-include ─────────────────────────────────────────────
 
-    def test_with_only_include(self):
-        vcs = ["pkg/__init__.py", "rust/src/lib.rs", "Cargo.toml", "tests/test.py"]
+    def test_only_include_exhaustive(self):
         hatch = {"targets": {"sdist": {"only-include": ["pkg", "rust", "Cargo.toml"]}}}
+        result = _sdist_expected_files(self.VCS, hatch)
+        assert "pkg/__init__.py" in result
+        assert "pkg/core.py" in result
+        assert "rust/src/lib.rs" in result
+        assert "Cargo.toml" in result
+        assert "Cargo.lock" not in result
+        assert "tests/test_pkg.py" not in result
+        assert "docs/index.md" not in result
+
+    # ── packages (acts as only-include fallback) ─────────────────
+
+    def test_packages_acts_as_only_include(self):
+        hatch = {"targets": {"sdist": {"packages": ["pkg"]}}}
+        result = _sdist_expected_files(self.VCS, hatch)
+        assert "pkg/__init__.py" in result
+        assert "pkg/core.py" in result
+        assert "rust/src/lib.rs" not in result
+        assert "Cargo.toml" not in result
+        assert "tests/test_pkg.py" not in result
+
+    def test_packages_with_include(self):
+        """packages + include: include is ignored (hatch treats packages
+        as only-include, making the walk 'explicit')."""
+        hatch = {
+            "targets": {
+                "sdist": {
+                    "packages": ["pkg"],
+                    "include": ["Cargo.toml", "Cargo.lock", "rust", "src"],
+                }
+            }
+        }
+        result = _sdist_expected_files(self.VCS, hatch)
+        # Only package files appear.
+        assert "pkg/__init__.py" in result
+        assert "pkg/core.py" in result
+        # include paths are NOT added when packages is set.
+        assert "Cargo.toml" not in result
+        assert "rust/src/lib.rs" not in result
+        assert "tests/test_pkg.py" not in result
+
+    # ── include (no packages, no only-include) ───────────────────
+
+    def test_include_filters_full_tree(self):
+        hatch = {"targets": {"sdist": {"include": ["pkg", "Cargo.toml"]}}}
+        result = _sdist_expected_files(self.VCS, hatch)
+        assert "pkg/__init__.py" in result
+        assert "Cargo.toml" in result
+        assert "rust/src/lib.rs" not in result
+        assert "tests/test_pkg.py" not in result
+
+    # ── exclude ──────────────────────────────────────────────────
+
+    def test_exclude_with_only_include(self):
+        hatch = {
+            "targets": {
+                "sdist": {
+                    "only-include": ["pkg", "rust", "Cargo.toml", "Cargo.lock"],
+                    "exclude": ["target"],
+                }
+            }
+        }
+        vcs = [*self.VCS, "rust/target/debug/foo"]
         result = _sdist_expected_files(vcs, hatch)
         assert "pkg/__init__.py" in result
         assert "rust/src/lib.rs" in result
-        assert "Cargo.toml" in result
-        assert "tests/test.py" not in result
+        assert "rust/target/debug/foo" not in result
 
-    def test_with_exclude(self):
-        vcs = ["pkg/__init__.py", "rust/target/debug/foo"]
-        hatch = {"targets": {"sdist": {"only-include": ["pkg", "rust"], "exclude": ["target"]}}}
+    def test_exclude_with_packages(self):
+        hatch = {
+            "targets": {
+                "sdist": {
+                    "packages": ["pkg"],
+                    "exclude": ["*.pyc"],
+                }
+            }
+        }
+        vcs = ["pkg/__init__.py", "pkg/__init__.pyc"]
         result = _sdist_expected_files(vcs, hatch)
         assert "pkg/__init__.py" in result
+        assert "pkg/__init__.pyc" not in result
+
+    def test_exclude_with_no_constraints(self):
+        hatch = {"targets": {"sdist": {"exclude": ["docs"]}}}
+        result = _sdist_expected_files(self.VCS, hatch)
+        assert "pkg/__init__.py" in result
+        assert "docs/index.md" not in result
+
+    # ── force-include ────────────────────────────────────────────
+
+    def test_force_include_adds_files(self):
+        hatch = {
+            "targets": {
+                "sdist": {
+                    "packages": ["pkg"],
+                    "force-include": {"/abs/Cargo.toml": "Cargo.toml"},
+                }
+            }
+        }
+        result = _sdist_expected_files(self.VCS, hatch)
+        assert "pkg/__init__.py" in result
+        assert "Cargo.toml" in result
+
+    def test_force_include_survives_exclude(self):
+        hatch = {
+            "targets": {
+                "sdist": {
+                    "only-include": ["pkg", "Cargo.toml"],
+                    "exclude": ["Cargo.toml"],
+                    "force-include": {"/abs/Cargo.toml": "Cargo.toml"},
+                }
+            }
+        }
+        result = _sdist_expected_files(self.VCS, hatch)
+        # force-include re-adds Cargo.toml even though exclude removed it
+        assert "Cargo.toml" in result
+
+    def test_global_force_include_fallback(self):
+        hatch = {
+            "force-include": {"outside/file.txt": "vendored/file.txt"},
+            "targets": {"sdist": {"packages": ["pkg"]}},
+        }
+        vcs = ["pkg/__init__.py", "vendored/file.txt"]
+        result = _sdist_expected_files(vcs, hatch)
+        assert "pkg/__init__.py" in result
+        assert "vendored/file.txt" in result
+
+    def test_target_force_include_overrides_global(self):
+        hatch = {
+            "force-include": {"global.txt": "global.txt"},
+            "targets": {
+                "sdist": {
+                    "packages": ["pkg"],
+                    "force-include": {"target.txt": "target.txt"},
+                }
+            },
+        }
+        vcs = ["pkg/__init__.py", "global.txt", "target.txt"]
+        result = _sdist_expected_files(vcs, hatch)
+        assert "target.txt" in result
+        # global force-include is overridden by target-level
+        assert "global.txt" not in result
+
+    # ── combined scenarios ───────────────────────────────────────
+
+    def test_only_include_with_exclude(self):
+        hatch = {
+            "targets": {
+                "sdist": {
+                    "only-include": ["pkg", "rust", "Cargo.toml", "Cargo.lock"],
+                    "exclude": ["target", "*.pyc"],
+                }
+            }
+        }
+        vcs = [*self.VCS, "rust/target/debug/foo", "pkg/__pycache__/core.pyc"]
+        result = _sdist_expected_files(vcs, hatch)
+        assert "pkg/__init__.py" in result
+        assert "rust/src/lib.rs" in result
         assert "rust/target/debug/foo" not in result
+        assert "pkg/__pycache__/core.pyc" not in result
+
+    def test_empty_config(self):
+        result = _sdist_expected_files(self.VCS, {"targets": {"sdist": {}}})
+        assert result == set(self.VCS)
+
+
+# ── _filter_extras_by_hatch ──────────────────────────────────────────
+
+
+class TestFilterExtrasByHatch:
+    """Verify that copier-derived extras are trimmed to match hatch config."""
+
+    EXTRAS = ["rust", "src", "Cargo.toml", "Cargo.lock", "target"]
+
+    def test_no_hatch_config(self):
+        assert _filter_extras_by_hatch(self.EXTRAS, {}) == self.EXTRAS
+
+    def test_only_include_keeps_matching(self):
+        hatch = {"targets": {"sdist": {"only-include": ["pkg", "rust", "Cargo.toml"]}}}
+        result = _filter_extras_by_hatch(self.EXTRAS, hatch)
+        assert "rust" in result
+        assert "Cargo.toml" in result
+        assert "src" not in result
+        assert "Cargo.lock" not in result
+
+    def test_packages_clears_root_extras(self):
+        """When only packages is set, non-package extras are removed."""
+        hatch = {"targets": {"sdist": {"packages": ["pkg"]}}}
+        result = _filter_extras_by_hatch(self.EXTRAS, hatch)
+        assert result == []
+
+    def test_packages_plus_include(self):
+        """include is ignored when packages is set (explicit walk)."""
+        hatch = {
+            "targets": {
+                "sdist": {
+                    "packages": ["pkg"],
+                    "include": ["Cargo.toml", "Cargo.lock", "rust", "src"],
+                }
+            }
+        }
+        result = _filter_extras_by_hatch(self.EXTRAS, hatch)
+        # packages acts as only-include; include is bypassed.
+        assert result == []
+
+    def test_include_only(self):
+        hatch = {"targets": {"sdist": {"include": ["rust", "Cargo.toml"]}}}
+        result = _filter_extras_by_hatch(self.EXTRAS, hatch)
+        assert "rust" in result
+        assert "Cargo.toml" in result
+        assert "src" not in result
+
+    def test_force_include_destinations_kept(self):
+        hatch = {
+            "targets": {
+                "sdist": {
+                    "packages": ["pkg"],
+                    "force-include": {"/abs/Cargo.toml": "Cargo.toml"},
+                }
+            }
+        }
+        result = _filter_extras_by_hatch(["Cargo.toml", "rust"], hatch)
+        assert "Cargo.toml" in result
+        assert "rust" not in result
+
+    def test_empty_extras(self):
+        hatch = {"targets": {"sdist": {"only-include": ["pkg"]}}}
+        assert _filter_extras_by_hatch([], hatch) == []
+
+    def test_global_force_include(self):
+        hatch = {
+            "force-include": {"vendored.c": "vendored.c"},
+            "targets": {"sdist": {"packages": ["pkg"]}},
+        }
+        result = _filter_extras_by_hatch(["vendored.c", "rust"], hatch)
+        assert "vendored.c" in result
+        assert "rust" not in result
 
 
 # ── load_config ───────────────────────────────────────────────────────
@@ -597,6 +831,41 @@ class TestFindDistFiles:
         sdist, wheel = find_dist_files(str(tmp_path))
         assert sdist is None
         assert wheel is None
+
+    def test_nonexistent_dir(self, tmp_path):
+        sdist, wheel = find_dist_files(str(tmp_path / "no-such-dir"))
+        assert sdist is None
+        assert wheel is None
+
+
+class TestFindPreBuilt:
+    def test_finds_in_dist(self, tmp_path):
+        dist_dir = tmp_path / "dist"
+        dist_dir.mkdir()
+        (dist_dir / "pkg-1.0.tar.gz").touch()
+        assert _find_pre_built(str(tmp_path)) == str(dist_dir)
+
+    def test_finds_in_wheelhouse(self, tmp_path):
+        wh = tmp_path / "wheelhouse"
+        wh.mkdir()
+        (wh / "pkg-1.0-py3-none-any.whl").touch()
+        assert _find_pre_built(str(tmp_path)) == str(wh)
+
+    def test_prefers_dist_over_wheelhouse(self, tmp_path):
+        dist_dir = tmp_path / "dist"
+        dist_dir.mkdir()
+        (dist_dir / "pkg-1.0.tar.gz").touch()
+        wh = tmp_path / "wheelhouse"
+        wh.mkdir()
+        (wh / "pkg-1.0-py3-none-any.whl").touch()
+        assert _find_pre_built(str(tmp_path)) == str(dist_dir)
+
+    def test_none_when_empty(self, tmp_path):
+        (tmp_path / "dist").mkdir()
+        assert _find_pre_built(str(tmp_path)) is None
+
+    def test_none_when_no_dirs(self, tmp_path):
+        assert _find_pre_built(str(tmp_path)) is None
 
 
 # ── get_vcs_files ─────────────────────────────────────────────────────
