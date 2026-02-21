@@ -495,12 +495,20 @@ def check_present(files: list[str], patterns: list[str], dist_type: str) -> list
     return errors
 
 
-def check_absent(files: list[str], patterns: list[str], dist_type: str) -> list[str]:
-    """Return error strings for any *patterns* found in *files*."""
+def check_absent(files: list[str], patterns: list[str], dist_type: str, *, present_patterns: list[str] | None = None) -> list[str]:
+    """Return error strings for any *patterns* found in *files*.
+
+    When *present_patterns* is given, files nested inside a directory
+    that matches a present pattern are not flagged.  This avoids false
+    positives like ``lerna/tests/fake_package/pyproject.toml`` being
+    flagged as unwanted when ``lerna`` is a required present pattern.
+    """
     errors: list[str] = []
     for pattern in patterns:
         translated = translate_extension(pattern)
         matching = [f for f in files if matches_pattern(f, pattern)]
+        if matching and present_patterns:
+            matching = [f for f in matching if not any(matches_pattern(f, pp) for pp in present_patterns)]
         if matching:
             msg = f"{dist_type}: unwanted pattern '{pattern}' matched: {', '.join(matching)}"
             if translated != pattern:
@@ -745,7 +753,7 @@ def check_dist(
                 messages.append(f"  Warning: could not compare against VCS: {exc}")
 
             errors.extend(check_present(sdist_files, config["sdist"]["present"], "sdist"))
-            errors.extend(check_absent(sdist_files, config["sdist"]["absent"], "sdist"))
+            errors.extend(check_absent(sdist_files, config["sdist"]["absent"], "sdist", present_patterns=config["sdist"]["present"]))
             errors.extend(check_wrong_platform_extensions(sdist_files, "sdist"))
 
         # ── wheel checks ─────────────────────────────────────────
@@ -757,7 +765,7 @@ def check_dist(
                     messages.append(f"  {f}")
 
             errors.extend(check_present(wheel_files, config["wheel"]["present"], "wheel"))
-            errors.extend(check_absent(wheel_files, config["wheel"]["absent"], "wheel"))
+            errors.extend(check_absent(wheel_files, config["wheel"]["absent"], "wheel", present_patterns=config["wheel"]["present"]))
             errors.extend(check_wrong_platform_extensions(wheel_files, "wheel"))
     finally:
         if pre_built is None:
