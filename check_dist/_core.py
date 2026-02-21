@@ -99,7 +99,8 @@ def load_config(pyproject_path: str | Path = "pyproject.toml", *, source_dir: st
         if source_dir is None:
             source_dir = path.parent
         copier_cfg = load_copier_config(source_dir)
-        defaults = copier_defaults(copier_cfg)
+        hatch_cfg = config.get("tool", {}).get("hatch", {}).get("build", {})
+        defaults = copier_defaults(copier_cfg, hatch_config=hatch_cfg)
         if defaults is not None:
             return defaults
         return empty
@@ -145,7 +146,7 @@ _EXTENSION_DEFAULTS: dict[str, dict] = {
     },
     "rust": {
         "sdist_present_extra": ["rust", "src", "Cargo.toml", "Cargo.lock"],
-        "sdist_absent_extra": [".gitattributes", "target"],
+        "sdist_absent_extra": [".gitattributes", ".vscode", "target"],
         "wheel_absent_extra": ["rust", "src", "Cargo.toml"],
     },
     "js": {
@@ -216,12 +217,18 @@ def _module_name_from_project(project_name: str) -> str:
     return re.sub(r"[\s-]+", "_", project_name).strip("_")
 
 
-def copier_defaults(copier_config: dict) -> dict | None:
+def copier_defaults(copier_config: dict, hatch_config: dict | None = None) -> dict | None:
     """Derive default check-dist config from copier answers.
 
     Returns a config dict with the same shape as ``load_config`` output,
     or ``None`` if deriving defaults is not possible (no ``add_extension``
     key, or unknown extension type).
+
+    When *hatch_config* is provided, ``sdist_present_extra`` patterns are
+    filtered against the hatch sdist configuration to only require paths
+    that will actually appear in the archive.  Follows hatch precedence:
+    ``only-include`` (exhaustive) > ``packages`` (used as ``only-include``
+    fallback) > ``include`` (filter on full tree).
     """
     extension = copier_config.get("add_extension")
     project_name = copier_config.get("project_name")
@@ -234,7 +241,12 @@ def copier_defaults(copier_config: dict) -> dict | None:
 
     module = _module_name_from_project(project_name)
 
-    sdist_present = [module, *ext_defaults.get("sdist_present_extra", []), *_COMMON_SDIST_PRESENT]
+    sdist_present_extra = list(ext_defaults.get("sdist_present_extra", []))
+
+    if hatch_config:
+        sdist_present_extra = _filter_extras_by_hatch(sdist_present_extra, hatch_config)
+
+    sdist_present = [module, *sdist_present_extra, *_COMMON_SDIST_PRESENT]
     sdist_absent = [*_COMMON_SDIST_ABSENT, *ext_defaults.get("sdist_absent_extra", [])]
     wheel_present = [module]
     wheel_absent = [*_COMMON_WHEEL_ABSENT, *ext_defaults.get("wheel_absent_extra", [])]
@@ -243,6 +255,50 @@ def copier_defaults(copier_config: dict) -> dict | None:
         "sdist": {"present": sdist_present, "absent": sdist_absent},
         "wheel": {"present": wheel_present, "absent": wheel_absent},
     }
+
+
+def _filter_extras_by_hatch(extras: list[str], hatch_config: dict) -> list[str]:
+    """Filter copier sdist_present_extra against the hatch sdist config.
+
+    Uses the same precedence as hatchling:
+    1. ``only-include`` — exhaustive; keep extras that appear in the list.
+    2. ``packages`` (when no ``only-include``) — acts as ``only-include``
+       fallback; keep extras that appear in the list.
+    3. ``include`` — keep extras that match an include pattern.
+    4. ``force-include`` — destinations are always present; keep extras
+       whose path appears as a force-include destination.
+    5. No constraints — keep everything.
+    """
+    sdist_cfg = hatch_config.get("targets", {}).get("sdist", {})
+    only_include = sdist_cfg.get("only-include")
+    packages = sdist_cfg.get("packages")
+    includes = sdist_cfg.get("include")
+    force_include = sdist_cfg.get("force-include") or hatch_config.get("force-include") or {}
+
+    # Collect the set of paths that will appear in the sdist.
+    allowed: set[str] | None = None
+
+    if only_include is not None:
+        allowed = set(only_include)
+    elif packages is not None:
+        # Hatch treats packages as only-include (explicit walk).
+        # include is bypassed during an explicit walk.
+        allowed = set(packages)
+
+    # force-include destinations are always present.
+    force_paths = {v.strip("/") for v in force_include.values()}
+
+    if allowed is not None:
+        allowed |= force_paths
+        return [p for p in extras if p in allowed]
+
+    # include-only (no packages, no only-include): filter extras.
+    if includes is not None:
+        include_set = set(includes) | force_paths
+        return [p for p in extras if p in include_set]
+
+    # No restrictions — keep all extras.
+    return extras
 
 
 # ── Building ──────────────────────────────────────────────────────────
@@ -295,12 +351,31 @@ def find_dist_files(output_dir: str) -> tuple[str | None, str | None]:
     """Return ``(sdist_path, wheel_path)`` found in *output_dir*."""
     sdist_path = None
     wheel_path = None
+    if not os.path.isdir(output_dir):
+        return None, None
     for name in os.listdir(output_dir):
         if name.endswith((".tar.gz", ".zip")):
             sdist_path = os.path.join(output_dir, name)
         elif name.endswith(".whl"):
             wheel_path = os.path.join(output_dir, name)
     return sdist_path, wheel_path
+
+
+_DEFAULT_DIST_DIRS = ["dist", "wheelhouse"]
+
+
+def _find_pre_built(source_dir: str) -> str | None:
+    """Search default directories for pre-built distributions.
+
+    Checks ``dist/`` and ``wheelhouse/`` under *source_dir*.  Returns the
+    first directory that contains at least one sdist or wheel, or ``None``.
+    """
+    for dirname in _DEFAULT_DIST_DIRS:
+        candidate = os.path.join(source_dir, dirname)
+        sdist, wheel = find_dist_files(candidate)
+        if sdist or wheel:
+            return candidate
+    return None
 
 
 # ── Listing files ─────────────────────────────────────────────────────
@@ -470,43 +545,62 @@ def _sdist_expected_files(vcs_files: list[str], hatch_config: dict) -> set[str]:
     """Derive the set of VCS files we expect to see in the sdist,
     taking ``[tool.hatch.build.targets.sdist]`` into account.
 
-    This returns files under the declared ``packages``, ``only-include``,
-    or ``include`` patterns — i.e. the *source* files that must be present.
-    Top-level metadata files (pyproject.toml, README, LICENSE, …) are
-    intentionally left to the ``present``/``absent`` checks in the user config.
+    Follows hatchling's precedence:
+
+    1. ``only-include`` is an exhaustive list of paths to walk.
+    2. If absent, ``packages`` is used as ``only-include`` (hatch fallback).
+    3. If neither is set and ``include`` is present, only files matching
+       ``include`` patterns are kept.
+    4. ``exclude`` always removes files (except force-included ones).
+    5. ``force-include`` entries are always present regardless of other
+       settings.  Hatch also auto-force-includes ``pyproject.toml``,
+       ``.gitignore``, README, and LICENSE files.
     """
     sdist_cfg = hatch_config.get("targets", {}).get("sdist", {})
     only_include = sdist_cfg.get("only-include")
     packages = sdist_cfg.get("packages")
     includes = sdist_cfg.get("include", [])
     excludes = sdist_cfg.get("exclude", [])
+    force_include = sdist_cfg.get("force-include", {})
 
-    # Determine scan paths following hatch's precedence:
-    #   only-include > packages > (everything)
-    if only_include is not None:
-        scan_paths = only_include
-    elif packages is not None:
-        scan_paths = packages
-    else:
-        scan_paths = None
+    # Also pick up global-level force-include (target overrides global,
+    # but if only global is set, use it).
+    if not force_include:
+        force_include = hatch_config.get("force-include", {})
+
+    # Step 1: Determine base set from only-include / packages / include.
+    # Hatch's fallback: only_include = configured or (packages or [])
+    # When truthy, only those directory roots are walked.
+    scan_paths = only_include if only_include is not None else packages
 
     expected = set()
-    for f in vcs_files:
-        if scan_paths is not None:
-            under_path = any(f == p or f.startswith(p.rstrip("/") + "/") for p in scan_paths)
-            if under_path:
+    if scan_paths is not None:
+        for f in vcs_files:
+            if any(f == p or f.startswith(p.rstrip("/") + "/") for p in scan_paths):
                 expected.add(f)
-        else:
-            # No explicit restrictions – everything in VCS is expected
-            expected.add(f)
+    elif includes:
+        # No only-include or packages: full tree walk, but include
+        # patterns act as a filter.
+        for f in vcs_files:
+            if any(_matches_hatch_pattern(f, inc) for inc in includes):
+                expected.add(f)
+    else:
+        # No restrictions — everything in VCS is expected.
+        expected = set(vcs_files)
 
-    if includes:
-        # TODO:
-        pass
-
-    # Apply excludes
+    # Step 2: Apply excludes (never affects force-include).
     if excludes:
         expected = {f for f in expected if not any(_matches_hatch_pattern(f, exc) for exc in excludes)}
+
+    # Step 3: Add force-include destinations.
+    # force-include is {source: dest} — we care about the dest paths
+    # since those are what appear in the archive.
+    for dest in force_include.values():
+        dest = dest.strip("/")
+        # If the dest matches a VCS file, add it.
+        for f in vcs_files:
+            if f == dest or f.startswith(dest.rstrip("/") + "/"):
+                expected.add(f)
 
     return expected
 
@@ -567,6 +661,7 @@ def check_dist(
     no_isolation: bool = False,
     verbose: bool = False,
     pre_built: str | None = None,
+    rebuild: bool = False,
 ) -> tuple[bool, list[str]]:
     """Run all distribution checks.
 
@@ -582,6 +677,9 @@ def check_dist(
         If given, skip building and use existing dist files from this
         directory.  Useful when native toolchains have already produced
         the archives.
+    rebuild:
+        Force a fresh build even when pre-built distributions exist in
+        ``dist/`` or ``wheelhouse/``.
 
     Returns ``(success, messages)``.
     """
@@ -597,7 +695,20 @@ def check_dist(
         dist_dir = os.path.abspath(pre_built)
         messages.append(f"Using pre-built distributions from {dist_dir}")
         sdist_path, wheel_path = find_dist_files(dist_dir)
+    elif not rebuild:
+        # Auto-detect pre-built dists in dist/ or wheelhouse/
+        detected = _find_pre_built(source_dir)
+        if detected is not None:
+            dist_dir = detected
+            messages.append(f"Using pre-built distributions from {dist_dir}")
+            sdist_path, wheel_path = find_dist_files(dist_dir)
+            pre_built = dist_dir  # so downstream logic treats it as pre-built
+        else:
+            pre_built = None  # fall through to build
     else:
+        pre_built = None  # --rebuild: ignore any existing dists
+
+    if pre_built is None:
         tmpdir_ctx = tempfile.TemporaryDirectory(prefix="check-dist-")
         tmpdir = tmpdir_ctx.__enter__()
         try:

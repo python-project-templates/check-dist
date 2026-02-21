@@ -34,7 +34,12 @@ def main(argv: list[str] | None = None) -> None:
         "--pre-built",
         metavar="DIR",
         default=None,
-        help="Skip building and use existing dist files from DIR",
+        help="Use existing dist files from DIR instead of building",
+    )
+    parser.add_argument(
+        "--rebuild",
+        action="store_true",
+        help="Force a fresh build even when pre-built dists exist in dist/ or wheelhouse/",
     )
     args = parser.parse_args(argv)
 
@@ -44,6 +49,7 @@ def main(argv: list[str] | None = None) -> None:
             no_isolation=args.no_isolation,
             verbose=args.verbose,
             pre_built=args.pre_built,
+            rebuild=args.rebuild,
         )
         for msg in messages:
             print(msg)
