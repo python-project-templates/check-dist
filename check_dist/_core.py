@@ -145,7 +145,7 @@ _EXTENSION_DEFAULTS: dict[str, dict] = {
         "wheel_absent_extra": ["cpp"],
     },
     "rust": {
-        "sdist_present_extra": ["rust", "src", "Cargo.toml", "Cargo.lock"],
+        "sdist_present_extra": ["rust", "Cargo.toml", "Cargo.lock"],
         "sdist_absent_extra": [".gitattributes", ".vscode", "target"],
         "wheel_absent_extra": ["rust", "src", "Cargo.toml"],
     },
@@ -160,7 +160,7 @@ _EXTENSION_DEFAULTS: dict[str, dict] = {
         "wheel_absent_extra": ["js"],
     },
     "rustjswasm": {
-        "sdist_present_extra": ["js", "rust", "src", "Cargo.toml", "Cargo.lock"],
+        "sdist_present_extra": ["js", "rust", "Cargo.toml", "Cargo.lock"],
         "sdist_absent_extra": [".gitattributes", ".vscode", "target"],
         "wheel_absent_extra": ["js", "rust", "src", "Cargo.toml"],
     },
