@@ -205,6 +205,36 @@ class TestCheckAbsent:
         assert len(errors) == 1
         assert "docs" in errors[0]
 
+    def test_nested_in_present_pattern_skipped(self):
+        """Files nested inside a 'present' dir are not flagged as absent."""
+        files = [
+            "lerna/__init__.py",
+            "lerna/test_utils/configs/missing_init_py/.gitignore",
+            "lerna/tests/fake_package/pyproject.toml",
+            "lerna/tests/fake_package2/pyproject.toml",
+            "pyproject.toml",  # top-level: should still be caught
+        ]
+        errors = check_absent(
+            files,
+            [".gitignore", "pyproject.toml"],
+            "wheel",
+            present_patterns=["lerna"],
+        )
+        assert len(errors) == 1
+        assert "pyproject.toml" in errors[0]
+        # Only the top-level pyproject.toml, not the nested ones
+        assert "lerna/" not in errors[0]
+
+    def test_present_patterns_none_flags_all(self):
+        """Without present_patterns, nested files are still flagged."""
+        files = [
+            "lerna/tests/fake_package/pyproject.toml",
+            "pyproject.toml",
+        ]
+        errors = check_absent(files, ["pyproject.toml"], "wheel")
+        assert len(errors) == 1
+        assert "lerna/tests/fake_package/pyproject.toml" in errors[0]
+
 
 # ── check_wrong_platform_extensions ──────────────────────────────────
 
