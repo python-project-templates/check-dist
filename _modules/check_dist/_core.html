@@ -1,0 +1,1582 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>check_dist._core - v</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=890fd012" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand"> <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v</code></div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text"> <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v</code></span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/src/configuration.html">Configuration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../autoapi/test_all/index.html">test_all</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/check_dist/index.html">check_dist</a><input aria-label="Toggle navigation of check_dist" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/check_dist/_cli/index.html">check_dist._cli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/check_dist/_core/index.html">check_dist._core</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for check_dist._core</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Core check-dist logic for checking Python source and wheel distributions.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">fnmatch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tomllib</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tomli</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tomllib</span>
+
+
+<div class="viewcode-block" id="CheckDistError">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.CheckDistError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CheckDistError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when distribution checks fail.&quot;&quot;&quot;</span></div>
+
+
+
+<span class="c1"># Maps file extensions from other platforms to this platform&#39;s equivalent.</span>
+<span class="c1"># Python extension modules use .so on Linux/macOS and .pyd on Windows.</span>
+<span class="n">_PLATFORM_EXTENSION_MAP</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;win32&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;.so&quot;</span><span class="p">:</span> <span class="s2">&quot;.pyd&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;.dylib&quot;</span><span class="p">:</span> <span class="s2">&quot;.dll&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;linux&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;.pyd&quot;</span><span class="p">:</span> <span class="s2">&quot;.so&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;.dll&quot;</span><span class="p">:</span> <span class="s2">&quot;.so&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;darwin&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;.pyd&quot;</span><span class="p">:</span> <span class="s2">&quot;.so&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;.dll&quot;</span><span class="p">:</span> <span class="s2">&quot;.dylib&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="_get_platform_key">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core._get_platform_key">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_platform_key</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;win32&quot;</span>
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;darwin&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;linux&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="translate_extension">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.translate_extension">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">translate_extension</span><span class="p">(</span><span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate file extensions to the current platform&#39;s convention.</span>
+
+<span class="sd">    For example, if a user specifies ``*.so`` on Windows, this returns ``*.pyd``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">_PLATFORM_EXTENSION_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_get_platform_key</span><span class="p">(),</span> <span class="p">{})</span>
+    <span class="k">for</span> <span class="n">src_ext</span><span class="p">,</span> <span class="n">dst_ext</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">src_ext</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pattern</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">src_ext</span><span class="p">)]</span> <span class="o">+</span> <span class="n">dst_ext</span>
+    <span class="k">return</span> <span class="n">pattern</span></div>
+
+
+
+<div class="viewcode-block" id="_wrong_platform_extensions">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core._wrong_platform_extensions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_wrong_platform_extensions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return extensions that should NOT appear on the current platform.&quot;&quot;&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">_PLATFORM_EXTENSION_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_get_platform_key</span><span class="p">(),</span> <span class="p">{})</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="load_config">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.load_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="n">pyproject_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load ``[tool.check-dist]`` configuration from *pyproject.toml*.</span>
+
+<span class="sd">    If no ``[tool.check-dist]`` section exists and *source_dir* contains a</span>
+<span class="sd">    ``.copier-answers.yaml`` with an ``add_extension`` key, sensible</span>
+<span class="sd">    defaults are derived from the copier template answers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">pyproject_path</span><span class="p">)</span>
+    <span class="n">empty</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;present&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;absent&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+        <span class="s2">&quot;wheel&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;present&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;absent&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="c1"># No pyproject.toml at all — try copier defaults</span>
+        <span class="k">if</span> <span class="n">source_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">copier_cfg</span> <span class="o">=</span> <span class="n">load_copier_config</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+            <span class="n">defaults</span> <span class="o">=</span> <span class="n">copier_defaults</span><span class="p">(</span><span class="n">copier_cfg</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">defaults</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">defaults</span>
+        <span class="k">return</span> <span class="n">empty</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">tomllib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">cd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;check-dist&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="c1"># If there&#39;s no [tool.check-dist] section at all, try copier defaults</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cd</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">source_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">source_dir</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span>
+        <span class="n">copier_cfg</span> <span class="o">=</span> <span class="n">load_copier_config</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+        <span class="n">hatch_cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hatch&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="n">copier_defaults</span><span class="p">(</span><span class="n">copier_cfg</span><span class="p">,</span> <span class="n">hatch_config</span><span class="o">=</span><span class="n">hatch_cfg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">defaults</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">defaults</span>
+        <span class="k">return</span> <span class="n">empty</span>
+
+    <span class="n">base_present</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;present&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="n">base_absent</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;absent&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="n">sdist_cfg</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sdist&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">wheel_cfg</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wheel&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;present&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">*</span><span class="n">base_present</span><span class="p">,</span> <span class="o">*</span><span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;present&quot;</span><span class="p">,</span> <span class="p">[])],</span>
+            <span class="s2">&quot;absent&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">*</span><span class="n">base_absent</span><span class="p">,</span> <span class="o">*</span><span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;absent&quot;</span><span class="p">,</span> <span class="p">[])],</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;wheel&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;present&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">*</span><span class="n">base_present</span><span class="p">,</span> <span class="o">*</span><span class="n">wheel_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;present&quot;</span><span class="p">,</span> <span class="p">[])],</span>
+            <span class="s2">&quot;absent&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">*</span><span class="n">base_absent</span><span class="p">,</span> <span class="o">*</span><span class="n">wheel_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;absent&quot;</span><span class="p">,</span> <span class="p">[])],</span>
+        <span class="p">},</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="load_hatch_config">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.load_hatch_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_hatch_config</span><span class="p">(</span><span class="n">pyproject_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load ``[tool.hatch.build]`` configuration from *pyproject.toml*.&quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">pyproject_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">tomllib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hatch&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+
+
+<span class="c1"># ── Copier template defaults ─────────────────────────────────────────</span>
+
+<span class="c1"># Per-extension type defaults for sdist/wheel present/absent patterns.</span>
+<span class="c1"># Keys follow the ``add_extension`` value in ``.copier-answers.yaml``.</span>
+<span class="n">_EXTENSION_DEFAULTS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;cpp&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist_present_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cpp&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;sdist_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;.clang-format&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;wheel_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cpp&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;rust&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist_present_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;rust&quot;</span><span class="p">,</span> <span class="s2">&quot;Cargo.toml&quot;</span><span class="p">,</span> <span class="s2">&quot;Cargo.lock&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;sdist_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;.gitattributes&quot;</span><span class="p">,</span> <span class="s2">&quot;.vscode&quot;</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;wheel_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;rust&quot;</span><span class="p">,</span> <span class="s2">&quot;src&quot;</span><span class="p">,</span> <span class="s2">&quot;Cargo.toml&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;js&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist_present_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;js&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;sdist_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;.gitattributes&quot;</span><span class="p">,</span> <span class="s2">&quot;.vscode&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;wheel_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;js&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;jupyter&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist_present_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;js&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;sdist_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;.gitattributes&quot;</span><span class="p">,</span> <span class="s2">&quot;.vscode&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;wheel_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;js&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;rustjswasm&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist_present_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;js&quot;</span><span class="p">,</span> <span class="s2">&quot;rust&quot;</span><span class="p">,</span> <span class="s2">&quot;Cargo.toml&quot;</span><span class="p">,</span> <span class="s2">&quot;Cargo.lock&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;sdist_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;.gitattributes&quot;</span><span class="p">,</span> <span class="s2">&quot;.vscode&quot;</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;wheel_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;js&quot;</span><span class="p">,</span> <span class="s2">&quot;rust&quot;</span><span class="p">,</span> <span class="s2">&quot;src&quot;</span><span class="p">,</span> <span class="s2">&quot;Cargo.toml&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;cppjswasm&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist_present_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cpp&quot;</span><span class="p">,</span> <span class="s2">&quot;js&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;sdist_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;.clang-format&quot;</span><span class="p">,</span> <span class="s2">&quot;.vscode&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;wheel_absent_extra&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;js&quot;</span><span class="p">,</span> <span class="s2">&quot;cpp&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;python&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist_present_extra&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;sdist_absent_extra&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;wheel_absent_extra&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># Common patterns shared across all extension types.</span>
+<span class="n">_COMMON_SDIST_PRESENT</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LICENSE&quot;</span><span class="p">,</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span> <span class="s2">&quot;README.md&quot;</span><span class="p">]</span>
+<span class="n">_COMMON_SDIST_ABSENT</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;.copier-answers.yaml&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Makefile&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.github&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;docs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;examples&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tests&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">_COMMON_WHEEL_ABSENT</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;.gitignore&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.copier-answers.yaml&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Makefile&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.github&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;docs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;examples&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tests&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="load_copier_config">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.load_copier_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_copier_config</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load ``.copier-answers.yaml`` from *source_dir*, if it exists.&quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;.copier-answers.yaml&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span></div>
+
+
+
+<div class="viewcode-block" id="_module_name_from_project">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core._module_name_from_project">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_module_name_from_project</span><span class="p">(</span><span class="n">project_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a human project name to a Python module name.</span>
+
+<span class="sd">    Replaces spaces and hyphens with underscores.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[\s-]+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="copier_defaults">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.copier_defaults">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">copier_defaults</span><span class="p">(</span><span class="n">copier_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">hatch_config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive default check-dist config from copier answers.</span>
+
+<span class="sd">    Returns a config dict with the same shape as ``load_config`` output,</span>
+<span class="sd">    or ``None`` if deriving defaults is not possible (no ``add_extension``</span>
+<span class="sd">    key, or unknown extension type).</span>
+
+<span class="sd">    When *hatch_config* is provided, ``sdist_present_extra`` patterns are</span>
+<span class="sd">    filtered against the hatch sdist configuration to only require paths</span>
+<span class="sd">    that will actually appear in the archive.  Follows hatch precedence:</span>
+<span class="sd">    ``only-include`` (exhaustive) &gt; ``packages`` (used as ``only-include``</span>
+<span class="sd">    fallback) &gt; ``include`` (filter on full tree).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">copier_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;add_extension&quot;</span><span class="p">)</span>
+    <span class="n">project_name</span> <span class="o">=</span> <span class="n">copier_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project_name&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">extension</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">project_name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">ext_defaults</span> <span class="o">=</span> <span class="n">_EXTENSION_DEFAULTS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">extension</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ext_defaults</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">module</span> <span class="o">=</span> <span class="n">_module_name_from_project</span><span class="p">(</span><span class="n">project_name</span><span class="p">)</span>
+
+    <span class="n">sdist_present_extra</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ext_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sdist_present_extra&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+
+    <span class="k">if</span> <span class="n">hatch_config</span><span class="p">:</span>
+        <span class="n">sdist_present_extra</span> <span class="o">=</span> <span class="n">_filter_extras_by_hatch</span><span class="p">(</span><span class="n">sdist_present_extra</span><span class="p">,</span> <span class="n">hatch_config</span><span class="p">)</span>
+
+    <span class="n">sdist_present</span> <span class="o">=</span> <span class="p">[</span><span class="n">module</span><span class="p">,</span> <span class="o">*</span><span class="n">sdist_present_extra</span><span class="p">,</span> <span class="o">*</span><span class="n">_COMMON_SDIST_PRESENT</span><span class="p">]</span>
+    <span class="n">sdist_absent</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">_COMMON_SDIST_ABSENT</span><span class="p">,</span> <span class="o">*</span><span class="n">ext_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sdist_absent_extra&quot;</span><span class="p">,</span> <span class="p">[])]</span>
+    <span class="n">wheel_present</span> <span class="o">=</span> <span class="p">[</span><span class="n">module</span><span class="p">]</span>
+    <span class="n">wheel_absent</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">_COMMON_WHEEL_ABSENT</span><span class="p">,</span> <span class="o">*</span><span class="n">ext_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wheel_absent_extra&quot;</span><span class="p">,</span> <span class="p">[])]</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;sdist&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;present&quot;</span><span class="p">:</span> <span class="n">sdist_present</span><span class="p">,</span> <span class="s2">&quot;absent&quot;</span><span class="p">:</span> <span class="n">sdist_absent</span><span class="p">},</span>
+        <span class="s2">&quot;wheel&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;present&quot;</span><span class="p">:</span> <span class="n">wheel_present</span><span class="p">,</span> <span class="s2">&quot;absent&quot;</span><span class="p">:</span> <span class="n">wheel_absent</span><span class="p">},</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="_filter_extras_by_hatch">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core._filter_extras_by_hatch">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_filter_extras_by_hatch</span><span class="p">(</span><span class="n">extras</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">hatch_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter copier sdist_present_extra against the hatch sdist config.</span>
+
+<span class="sd">    Uses the same precedence as hatchling:</span>
+<span class="sd">    1. ``only-include`` — exhaustive; keep extras that appear in the list.</span>
+<span class="sd">    2. ``packages`` (when no ``only-include``) — acts as ``only-include``</span>
+<span class="sd">       fallback; keep extras that appear in the list.</span>
+<span class="sd">    3. ``include`` — keep extras that match an include pattern.</span>
+<span class="sd">    4. ``force-include`` — destinations are always present; keep extras</span>
+<span class="sd">       whose path appears as a force-include destination.</span>
+<span class="sd">    5. No constraints — keep everything.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sdist_cfg</span> <span class="o">=</span> <span class="n">hatch_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;targets&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sdist&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">only_include</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;only-include&quot;</span><span class="p">)</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;packages&quot;</span><span class="p">)</span>
+    <span class="n">includes</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">)</span>
+    <span class="n">force_include</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;force-include&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">hatch_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;force-include&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="c1"># Collect the set of paths that will appear in the sdist.</span>
+    <span class="n">allowed</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">only_include</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">allowed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">only_include</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">packages</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Hatch treats packages as only-include (explicit walk).</span>
+        <span class="c1"># include is bypassed during an explicit walk.</span>
+        <span class="n">allowed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">packages</span><span class="p">)</span>
+
+    <span class="c1"># force-include destinations are always present.</span>
+    <span class="n">force_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">force_include</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+
+    <span class="k">if</span> <span class="n">allowed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">allowed</span> <span class="o">|=</span> <span class="n">force_paths</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">extras</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">allowed</span><span class="p">]</span>
+
+    <span class="c1"># include-only (no packages, no only-include): filter extras.</span>
+    <span class="k">if</span> <span class="n">includes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">include_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">includes</span><span class="p">)</span> <span class="o">|</span> <span class="n">force_paths</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">extras</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">include_set</span><span class="p">]</span>
+
+    <span class="c1"># No restrictions — keep all extras.</span>
+    <span class="k">return</span> <span class="n">extras</span></div>
+
+
+
+<span class="c1"># ── Building ──────────────────────────────────────────────────────────</span>
+
+
+<div class="viewcode-block" id="build_dists">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core.build_dists">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_dists</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">no_isolation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build sdist and wheel into *output_dir*.</span>
+
+<span class="sd">    Returns a list of warnings (e.g. when only one dist type could be built).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cmd_base</span> <span class="o">=</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">no_isolation</span><span class="p">:</span>
+        <span class="n">cmd_base</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--no-isolation&quot;</span><span class="p">)</span>
+    <span class="n">cmd_base</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+
+    <span class="c1"># Try building both together first (fastest path)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="s2">&quot;--sdist&quot;</span><span class="p">,</span> <span class="s2">&quot;--wheel&quot;</span><span class="p">,</span> <span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">no_isolation</span><span class="p">:</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;--no-isolation&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">warnings</span>
+
+    <span class="c1"># Combined build failed – try each target individually so that a</span>
+    <span class="c1"># wheel-only failure (e.g. missing native toolchain) doesn&#39;t block</span>
+    <span class="c1"># sdist checks.</span>
+    <span class="n">built_any</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;--sdist&quot;</span><span class="p">,</span> <span class="s2">&quot;--wheel&quot;</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">no_isolation</span><span class="p">:</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;--no-isolation&quot;</span><span class="p">)</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">built_any</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;sdist&quot;</span> <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;--sdist&quot;</span> <span class="k">else</span> <span class="s2">&quot;wheel&quot;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2"> build failed:</span><span class="se">\n</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">built_any</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CheckDistError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Build failed:</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">warnings</span></div>
+
+
+
+<div class="viewcode-block" id="find_dist_files">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.find_dist_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_dist_files</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return ``(sdist_path, wheel_path)`` found in *output_dir*.&quot;&quot;&quot;</span>
+    <span class="n">sdist_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">wheel_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.tar.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;.zip&quot;</span><span class="p">)):</span>
+            <span class="n">sdist_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.whl&quot;</span><span class="p">):</span>
+            <span class="n">wheel_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sdist_path</span><span class="p">,</span> <span class="n">wheel_path</span></div>
+
+
+
+<span class="n">_DEFAULT_DIST_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dist&quot;</span><span class="p">,</span> <span class="s2">&quot;wheelhouse&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="_find_pre_built">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core._find_pre_built">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_pre_built</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search default directories for pre-built distributions.</span>
+
+<span class="sd">    Checks ``dist/`` and ``wheelhouse/`` under *source_dir*.  Returns the</span>
+<span class="sd">    first directory that contains at least one sdist or wheel, or ``None``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">dirname</span> <span class="ow">in</span> <span class="n">_DEFAULT_DIST_DIRS</span><span class="p">:</span>
+        <span class="n">candidate</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">dirname</span><span class="p">)</span>
+        <span class="n">sdist</span><span class="p">,</span> <span class="n">wheel</span> <span class="o">=</span> <span class="n">find_dist_files</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sdist</span> <span class="ow">or</span> <span class="n">wheel</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">candidate</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<span class="c1"># ── Listing files ─────────────────────────────────────────────────────</span>
+
+
+<div class="viewcode-block" id="list_sdist_files">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.list_sdist_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_sdist_files</span><span class="p">(</span><span class="n">sdist_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List files inside an sdist, stripping the top-level directory.&quot;&quot;&quot;</span>
+    <span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">sdist_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tar.gz&quot;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">sdist_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">tf</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">tf</span><span class="o">.</span><span class="n">getmembers</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">():</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">sdist_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.zip&quot;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">sdist_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CheckDistError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown sdist format: </span><span class="si">{</span><span class="n">sdist_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="list_wheel_files">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.list_wheel_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_wheel_files</span><span class="p">(</span><span class="n">wheel_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List files inside a wheel.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">wheel_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">))</span></div>
+
+
+
+<span class="c1"># ── VCS integration ───────────────────────────────────────────────────</span>
+
+
+<div class="viewcode-block" id="get_vcs_files">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.get_vcs_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_vcs_files</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return files tracked by git in *source_dir*.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;ls-files&quot;</span><span class="p">,</span> <span class="s2">&quot;-z&quot;</span><span class="p">,</span> <span class="s2">&quot;--recurse-submodules&quot;</span><span class="p">],</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">cwd</span><span class="o">=</span><span class="n">source_dir</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CheckDistError</span><span class="p">(</span><span class="s2">&quot;git not found – only git is currently supported for VCS tracking&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CheckDistError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;git ls-files failed:</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># ── Pattern matching ──────────────────────────────────────────────────</span>
+
+
+<div class="viewcode-block" id="matches_pattern">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.matches_pattern">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">matches_pattern</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether *filepath* matches *pattern*.</span>
+
+<span class="sd">    * A bare name like ``check_dist`` matches any file whose path starts</span>
+<span class="sd">      with ``check_dist/``.</span>
+<span class="sd">    * Glob wildcards (``*``, ``?``, ``[…]``) are matched against both the</span>
+<span class="sd">      full path and the basename.</span>
+<span class="sd">    * Extensions are translated to the current platform before matching.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">translated</span> <span class="o">=</span> <span class="n">translate_extension</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="n">is_glob</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="n">translated</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="s2">&quot;*?[&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_glob</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filepath</span> <span class="o">==</span> <span class="n">translated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">filepath</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">translated</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="o">==</span> <span class="n">translated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">translated</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="n">translated</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="_matches_hatch_pattern">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core._matches_hatch_pattern">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_matches_hatch_pattern</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Match a file path against a hatch include/exclude pattern.</span>
+
+<span class="sd">    Hatch patterns may start with ``/`` (root-relative). Bare names match</span>
+<span class="sd">    as either an exact file, a directory prefix, or any path component.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pat</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filepath</span> <span class="o">==</span> <span class="n">pat</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">filepath</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">pat</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="c1"># Match as intermediate directory component (e.g. &quot;target&quot; in &quot;rust/target/debug/foo&quot;)</span>
+    <span class="n">component</span> <span class="o">=</span> <span class="n">pat</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">component</span> <span class="ow">in</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">filepath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">pat</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="n">pat</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<span class="c1"># ── Checking helpers ──────────────────────────────────────────────────</span>
+
+
+<div class="viewcode-block" id="check_present">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.check_present">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_present</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">patterns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">dist_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return error strings for any *patterns* not found in *files*.&quot;&quot;&quot;</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+        <span class="n">translated</span> <span class="o">=</span> <span class="n">translate_extension</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">matches_pattern</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dist_type</span><span class="si">}</span><span class="s2">: required pattern &#39;</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span>
+            <span class="k">if</span> <span class="n">translated</span> <span class="o">!=</span> <span class="n">pattern</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; (translated to &#39;</span><span class="si">{</span><span class="n">translated</span><span class="si">}</span><span class="s2">&#39; for </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">errors</span></div>
+
+
+
+<div class="viewcode-block" id="check_absent">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.check_absent">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_absent</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">patterns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">dist_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">present_patterns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return error strings for any *patterns* found in *files*.</span>
+
+<span class="sd">    When *present_patterns* is given, files nested inside a directory</span>
+<span class="sd">    that matches a present pattern are not flagged.  This avoids false</span>
+<span class="sd">    positives like ``lerna/tests/fake_package/pyproject.toml`` being</span>
+<span class="sd">    flagged as unwanted when ``lerna`` is a required present pattern.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+        <span class="n">translated</span> <span class="o">=</span> <span class="n">translate_extension</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="n">matching</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">matches_pattern</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">matching</span> <span class="ow">and</span> <span class="n">present_patterns</span><span class="p">:</span>
+            <span class="n">matching</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">matching</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">matches_pattern</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">pp</span><span class="p">)</span> <span class="k">for</span> <span class="n">pp</span> <span class="ow">in</span> <span class="n">present_patterns</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">matching</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dist_type</span><span class="si">}</span><span class="s2">: unwanted pattern &#39;</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&#39; matched: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matching</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">translated</span> <span class="o">!=</span> <span class="n">pattern</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; (translated to &#39;</span><span class="si">{</span><span class="n">translated</span><span class="si">}</span><span class="s2">&#39; for </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">errors</span></div>
+
+
+
+<div class="viewcode-block" id="check_wrong_platform_extensions">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.check_wrong_platform_extensions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_wrong_platform_extensions</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">dist_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Flag files that use an extension from another platform.&quot;&quot;&quot;</span>
+    <span class="n">wrong_exts</span> <span class="o">=</span> <span class="n">_wrong_platform_extensions</span><span class="p">()</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">wrong_exts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">):</span>
+                <span class="n">correct</span> <span class="o">=</span> <span class="n">translate_extension</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dist_type</span><span class="si">}</span><span class="s2">: &#39;</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">&#39; uses extension &#39;</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&#39; which is incorrect for </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="si">}</span><span class="s2"> (expected &#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">correct</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;)&quot;</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="n">errors</span></div>
+
+
+
+<span class="c1"># Patterns for top-level files hatch automatically includes in sdists.</span>
+<span class="n">_HATCH_AUTO_INCLUDE_PATTERNS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;README*&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LICENSE*&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;COPYING*&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NOTICE*&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AUTHORS*&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="_is_hatch_auto_included">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core._is_hatch_auto_included">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_hatch_auto_included</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if *filename* is a top-level file hatch auto-includes.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pat</span><span class="p">)</span> <span class="k">for</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">_HATCH_AUTO_INCLUDE_PATTERNS</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_sdist_expected_files">
+<a class="viewcode-back" href="../../autoapi/check_dist/_core/index.html#check_dist._core._sdist_expected_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sdist_expected_files</span><span class="p">(</span><span class="n">vcs_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">hatch_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive the set of VCS files we expect to see in the sdist,</span>
+<span class="sd">    taking ``[tool.hatch.build.targets.sdist]`` into account.</span>
+
+<span class="sd">    Follows hatchling&#39;s precedence:</span>
+
+<span class="sd">    1. ``only-include`` is an exhaustive list of paths to walk.</span>
+<span class="sd">    2. If absent, ``packages`` is used as ``only-include`` (hatch fallback).</span>
+<span class="sd">    3. If neither is set and ``include`` is present, only files matching</span>
+<span class="sd">       ``include`` patterns are kept.</span>
+<span class="sd">    4. ``exclude`` always removes files (except force-included ones).</span>
+<span class="sd">    5. ``force-include`` entries are always present regardless of other</span>
+<span class="sd">       settings.  Hatch also auto-force-includes ``pyproject.toml``,</span>
+<span class="sd">       ``.gitignore``, README, and LICENSE files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sdist_cfg</span> <span class="o">=</span> <span class="n">hatch_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;targets&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sdist&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">only_include</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;only-include&quot;</span><span class="p">)</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;packages&quot;</span><span class="p">)</span>
+    <span class="n">includes</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="n">excludes</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;exclude&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="n">force_include</span> <span class="o">=</span> <span class="n">sdist_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;force-include&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="c1"># Also pick up global-level force-include (target overrides global,</span>
+    <span class="c1"># but if only global is set, use it).</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">force_include</span><span class="p">:</span>
+        <span class="n">force_include</span> <span class="o">=</span> <span class="n">hatch_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;force-include&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="c1"># Step 1: Determine base set from only-include / packages / include.</span>
+    <span class="c1"># Hatch&#39;s fallback: only_include = configured or (packages or [])</span>
+    <span class="c1"># When truthy, only those directory roots are walked.</span>
+    <span class="n">scan_paths</span> <span class="o">=</span> <span class="n">only_include</span> <span class="k">if</span> <span class="n">only_include</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">packages</span>
+
+    <span class="n">expected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">scan_paths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">vcs_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">scan_paths</span><span class="p">):</span>
+                <span class="n">expected</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">includes</span><span class="p">:</span>
+        <span class="c1"># No only-include or packages: full tree walk, but include</span>
+        <span class="c1"># patterns act as a filter.</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">vcs_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">_matches_hatch_pattern</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">inc</span><span class="p">)</span> <span class="k">for</span> <span class="n">inc</span> <span class="ow">in</span> <span class="n">includes</span><span class="p">):</span>
+                <span class="n">expected</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># No restrictions — everything in VCS is expected.</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">vcs_files</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Apply excludes (never affects force-include).</span>
+    <span class="k">if</span> <span class="n">excludes</span><span class="p">:</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">expected</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">_matches_hatch_pattern</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span> <span class="k">for</span> <span class="n">exc</span> <span class="ow">in</span> <span class="n">excludes</span><span class="p">)}</span>
+
+    <span class="c1"># Step 3: Add force-include destinations.</span>
+    <span class="c1"># force-include is {source: dest} — we care about the dest paths</span>
+    <span class="c1"># since those are what appear in the archive.</span>
+    <span class="k">for</span> <span class="n">dest</span> <span class="ow">in</span> <span class="n">force_include</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="c1"># If the dest matches a VCS file, add it.</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">vcs_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="n">dest</span> <span class="ow">or</span> <span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">dest</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="n">expected</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">expected</span></div>
+
+
+
+<span class="n">_GENERATED_SDIST_FILES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;PKG-INFO&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="check_sdist_vs_vcs">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.check_sdist_vs_vcs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_sdist_vs_vcs</span><span class="p">(</span>
+    <span class="n">sdist_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">vcs_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">hatch_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">sdist_absent</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare sdist contents against VCS-tracked files.&quot;&quot;&quot;</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">_sdist_expected_files</span><span class="p">(</span><span class="n">vcs_files</span><span class="p">,</span> <span class="n">hatch_config</span><span class="p">)</span>
+    <span class="n">vcs_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">vcs_files</span><span class="p">)</span>
+
+    <span class="c1"># Clean sdist set: remove generated metadata</span>
+    <span class="n">sdist_set</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sdist_files</span> <span class="k">if</span> <span class="n">f</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_GENERATED_SDIST_FILES</span> <span class="ow">and</span> <span class="s2">&quot;.egg-info/&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.egg-info&quot;</span><span class="p">)}</span>
+
+    <span class="c1"># Artifacts are built files not in VCS but expected in dists</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">hatch_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;artifacts&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="c1"># &quot;Extra&quot; = files in sdist that are neither VCS-tracked nor</span>
+    <span class="c1"># generated artifacts.  This catches truly stray files.</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sdist_set</span> <span class="o">-</span> <span class="n">vcs_set</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">artifacts</span><span class="p">:</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">extra</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">matches_pattern</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">art</span><span class="p">)</span> <span class="k">for</span> <span class="n">art</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="p">)]</span>
+
+    <span class="c1"># &quot;Missing&quot; = VCS source files (under packages / includes) that</span>
+    <span class="c1"># are absent from the sdist.</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">expected</span> <span class="o">-</span> <span class="n">sdist_set</span><span class="p">)</span>
+    <span class="c1"># Filter common non-issues (dotfiles like .gitattributes)</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">missing</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)]</span>
+    <span class="c1"># Filter files that match the user&#39;s sdist absent patterns —</span>
+    <span class="c1"># if a file is explicitly expected to be absent, it&#39;s not &quot;missing&quot;.</span>
+    <span class="c1"># Always include the common absent patterns (docs, tests, etc.) since</span>
+    <span class="c1"># most build systems exclude these from sdists.</span>
+    <span class="n">all_absent</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_COMMON_SDIST_ABSENT</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sdist_absent</span><span class="p">:</span>
+        <span class="n">all_absent</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sdist_absent</span><span class="p">)</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">missing</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">matches_pattern</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">pat</span><span class="p">)</span> <span class="k">for</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">all_absent</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sdist contains files not tracked by VCS:</span><span class="se">\n\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">extra</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">VCS-tracked files missing from sdist: </span><span class="se">\n\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">errors</span></div>
+
+
+
+<span class="c1"># ── Main entry point ──────────────────────────────────────────────────</span>
+
+
+<div class="viewcode-block" id="check_dist">
+<a class="viewcode-back" href="../../autoapi/check_dist/index.html#check_dist._core.check_dist">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_dist</span><span class="p">(</span>
+    <span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">no_isolation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">pre_built</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">rebuild</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run all distribution checks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_dir:</span>
+<span class="sd">        Path to the project root.</span>
+<span class="sd">    no_isolation:</span>
+<span class="sd">        Passed to ``python -m build --no-isolation``.</span>
+<span class="sd">    verbose:</span>
+<span class="sd">        List every file in each distribution.</span>
+<span class="sd">    pre_built:</span>
+<span class="sd">        If given, skip building and use existing dist files from this</span>
+<span class="sd">        directory.  Useful when native toolchains have already produced</span>
+<span class="sd">        the archives.</span>
+<span class="sd">    rebuild:</span>
+<span class="sd">        Force a fresh build even when pre-built distributions exist in</span>
+<span class="sd">        ``dist/`` or ``wheelhouse/``.</span>
+
+<span class="sd">    Returns ``(success, messages)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">source_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+
+    <span class="n">pyproject_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">pyproject_path</span><span class="p">,</span> <span class="n">source_dir</span><span class="o">=</span><span class="n">source_dir</span><span class="p">)</span>
+    <span class="n">hatch_config</span> <span class="o">=</span> <span class="n">load_hatch_config</span><span class="p">(</span><span class="n">pyproject_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pre_built</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dist_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">pre_built</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using pre-built distributions from </span><span class="si">{</span><span class="n">dist_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sdist_path</span><span class="p">,</span> <span class="n">wheel_path</span> <span class="o">=</span> <span class="n">find_dist_files</span><span class="p">(</span><span class="n">dist_dir</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">rebuild</span><span class="p">:</span>
+        <span class="c1"># Auto-detect pre-built dists in dist/ or wheelhouse/</span>
+        <span class="n">detected</span> <span class="o">=</span> <span class="n">_find_pre_built</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">detected</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dist_dir</span> <span class="o">=</span> <span class="n">detected</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using pre-built distributions from </span><span class="si">{</span><span class="n">dist_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sdist_path</span><span class="p">,</span> <span class="n">wheel_path</span> <span class="o">=</span> <span class="n">find_dist_files</span><span class="p">(</span><span class="n">dist_dir</span><span class="p">)</span>
+            <span class="n">pre_built</span> <span class="o">=</span> <span class="n">dist_dir</span>  <span class="c1"># so downstream logic treats it as pre-built</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pre_built</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># fall through to build</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pre_built</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># --rebuild: ignore any existing dists</span>
+
+    <span class="k">if</span> <span class="n">pre_built</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tmpdir_ctx</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;check-dist-&quot;</span><span class="p">)</span>
+        <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tmpdir_ctx</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Building distributions...&quot;</span><span class="p">)</span>
+            <span class="n">build_warnings</span> <span class="o">=</span> <span class="n">build_dists</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">,</span> <span class="n">no_isolation</span><span class="o">=</span><span class="n">no_isolation</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">build_warnings</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">w</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sdist_path</span><span class="p">,</span> <span class="n">wheel_path</span> <span class="o">=</span> <span class="n">find_dist_files</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">tmpdir_ctx</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sdist_path</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">wheel_path</span><span class="p">:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;No distributions found after build&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">pre_built</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">sdist_path</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;No sdist found in pre-built directory&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">wheel_path</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;No wheel found in pre-built directory&quot;</span><span class="p">)</span>
+
+        <span class="c1"># ── sdist checks ─────────────────────────────────────────</span>
+        <span class="k">if</span> <span class="n">sdist_path</span><span class="p">:</span>
+            <span class="n">sdist_files</span> <span class="o">=</span> <span class="n">list_sdist_files</span><span class="p">(</span><span class="n">sdist_path</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sdist (</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sdist_path</span><span class="p">)</span><span class="si">}</span><span class="s2">) – </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sdist_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> file(s):&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sdist_files</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">vcs_files</span> <span class="o">=</span> <span class="n">get_vcs_files</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">check_sdist_vs_vcs</span><span class="p">(</span><span class="n">sdist_files</span><span class="p">,</span> <span class="n">vcs_files</span><span class="p">,</span> <span class="n">hatch_config</span><span class="p">,</span> <span class="n">sdist_absent</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sdist&quot;</span><span class="p">][</span><span class="s2">&quot;absent&quot;</span><span class="p">]))</span>
+            <span class="k">except</span> <span class="n">CheckDistError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Warning: could not compare against VCS: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">check_present</span><span class="p">(</span><span class="n">sdist_files</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;sdist&quot;</span><span class="p">][</span><span class="s2">&quot;present&quot;</span><span class="p">],</span> <span class="s2">&quot;sdist&quot;</span><span class="p">))</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">check_absent</span><span class="p">(</span><span class="n">sdist_files</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;sdist&quot;</span><span class="p">][</span><span class="s2">&quot;absent&quot;</span><span class="p">],</span> <span class="s2">&quot;sdist&quot;</span><span class="p">,</span> <span class="n">present_patterns</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sdist&quot;</span><span class="p">][</span><span class="s2">&quot;present&quot;</span><span class="p">]))</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">check_wrong_platform_extensions</span><span class="p">(</span><span class="n">sdist_files</span><span class="p">,</span> <span class="s2">&quot;sdist&quot;</span><span class="p">))</span>
+
+        <span class="c1"># ── wheel checks ─────────────────────────────────────────</span>
+        <span class="k">if</span> <span class="n">wheel_path</span><span class="p">:</span>
+            <span class="n">wheel_files</span> <span class="o">=</span> <span class="n">list_wheel_files</span><span class="p">(</span><span class="n">wheel_path</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">wheel (</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">wheel_path</span><span class="p">)</span><span class="si">}</span><span class="s2">) – </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wheel_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> file(s):&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">wheel_files</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">check_present</span><span class="p">(</span><span class="n">wheel_files</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;wheel&quot;</span><span class="p">][</span><span class="s2">&quot;present&quot;</span><span class="p">],</span> <span class="s2">&quot;wheel&quot;</span><span class="p">))</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">check_absent</span><span class="p">(</span><span class="n">wheel_files</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;wheel&quot;</span><span class="p">][</span><span class="s2">&quot;absent&quot;</span><span class="p">],</span> <span class="s2">&quot;wheel&quot;</span><span class="p">,</span> <span class="n">present_patterns</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;wheel&quot;</span><span class="p">][</span><span class="s2">&quot;present&quot;</span><span class="p">]))</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">check_wrong_platform_extensions</span><span class="p">(</span><span class="n">wheel_files</span><span class="p">,</span> <span class="s2">&quot;wheel&quot;</span><span class="p">))</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pre_built</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tmpdir_ctx</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s2"> error(s) found:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ERROR: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">messages</span>
+
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">All checks passed!&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">messages</span></div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"
+
+
+
+import zenumlLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/mermaid-zenuml@0.2.2/dist/mermaid-zenuml.esm.min.mjs"
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("True" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll(".mermaid svg");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("True" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+mermaid.registerLayoutLoaders(elkLayouts);
+
+
+
+mermaid.registerExternalDiagrams([zenumlLayouts]);
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
+    <script src="../../_static/js/custom.js?v=956e5d78"></script>
+    </body>
+</html>

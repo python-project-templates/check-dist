@@ -1,0 +1,13 @@
+# check-dist
+
+Check Python source and wheel distributions
+
+[![Build Status](https://github.com/python-project-templates/check-dist/actions/workflows/build.yaml/badge.svg?branch=main&event=push)](https://github.com/python-project-templates/check-dist/actions/workflows/build.yaml)
+[![codecov](https://codecov.io/gh/python-project-templates/check-dist/branch/main/graph/badge.svg)](https://codecov.io/gh/python-project-templates/check-dist)
+[![License](https://img.shields.io/github/license/python-project-templates/check-dist)](https://github.com/python-project-templates/check-dist)
+[![PyPI](https://img.shields.io/pypi/v/check-dist.svg)](https://pypi.python.org/pypi/check-dist)
+
+## Overview
+
+> [!NOTE]
+> This library was generated using [copier](https://copier.readthedocs.io/en/stable/) from the [Base Python Project Template repository](https://github.com/python-project-templates/base).

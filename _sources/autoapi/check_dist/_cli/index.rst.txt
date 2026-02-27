@@ -1,0 +1,24 @@
+check_dist._cli
+===============
+
+.. py:module:: check_dist._cli
+
+.. autoapi-nested-parse::
+
+   CLI entry point for check-dist.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   check_dist._cli.main
+
+
+Module Contents
+---------------
+
+.. py:function:: main(argv: list[str] | None = None) -> None
+
