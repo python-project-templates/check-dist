@@ -46,11 +46,22 @@ format: fix
 ################
 # Other Checks #
 ################
+<<<<<<< before updating
 .PHONY: check-dist checks check
 
 check-dist:  ## check python sdist with check-dist
 	check-dist -v
 
+=======
+.PHONY: check-dist check-types checks check
+
+check-dist:  ## check python sdist and wheel with check-dist
+	check-dist -v
+
+check-types:  ## check python types with ty
+	ty check --python $$(which python)
+
+>>>>>>> after updating
 checks: check-dist
 
 # Alias
