@@ -38,12 +38,7 @@ dependencies = [
 develop = [
     "build",
     "bump-my-version",
-<<<<<<< before updating
-    "codespell>=2.4,<2.5",
-=======
-    "check-dist",
     "codespell",
->>>>>>> after updating
     "hatchling",
     "mdformat",
     "mdformat-tables>=1",
@@ -79,7 +74,6 @@ filename = "pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
-<<<<<<< before updating
 [tool.check-dist]
 present = [
     "check_dist",
@@ -113,8 +107,6 @@ absent = [
 
 ]
 
-=======
->>>>>>> after updating
 [tool.coverage.run]
 branch = true
 omit = [
