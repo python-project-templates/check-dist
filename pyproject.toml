@@ -38,9 +38,9 @@ dependencies = [
 develop = [
     "build",
     "bump-my-version",
-    "codespell>=2.4,<2.5",
+    "codespell",
     "hatchling",
-    "mdformat>=0.7.22,<1.1",
+    "mdformat",
     "mdformat-tables>=1",
     "pytest",
     "pytest-cov",
@@ -112,6 +112,7 @@ branch = true
 omit = [
     "check_dist/tests/integration/",
 ]
+
 [tool.coverage.report]
 exclude_also = [
     "raise NotImplementedError",

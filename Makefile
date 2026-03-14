@@ -46,10 +46,13 @@ format: fix
 ################
 # Other Checks #
 ################
-.PHONY: check-dist checks check
+.PHONY: check-dist check-types checks check
 
-check-dist:  ## check python sdist with check-dist
+check-dist:  ## check python sdist and wheel with check-dist
 	check-dist -v
+
+check-types:  ## check python types with ty
+	ty check --python $$(which python)
 
 checks: check-dist
 
