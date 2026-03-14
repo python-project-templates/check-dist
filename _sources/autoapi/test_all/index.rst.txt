@@ -1,0 +1,527 @@
+test_all
+========
+
+.. py:module:: test_all
+
+.. autoapi-nested-parse::
+
+   Comprehensive tests for check_dist.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   test_all.TestTranslateExtension
+   test_all.TestMatchesPattern
+   test_all.TestCheckPresent
+   test_all.TestCheckAbsent
+   test_all.TestCheckWrongPlatformExtensions
+   test_all.TestCheckSdistVsVcs
+   test_all.TestMatchesHatchPattern
+   test_all.TestSdistExpectedFiles
+   test_all.TestFilterExtrasByHatch
+   test_all.TestLoadConfig
+   test_all.TestLoadHatchConfig
+   test_all.TestModuleNameFromProject
+   test_all.TestLoadCopierConfig
+   test_all.TestCopierDefaults
+   test_all.TestLoadConfigWithCopierFallback
+   test_all.TestListSdistFiles
+   test_all.TestListWheelFiles
+   test_all.TestFindDistFiles
+   test_all.TestFindPreBuilt
+   test_all.TestGetVcsFiles
+   test_all.TestCheckDistIntegration
+   test_all.TestCLI
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   test_all._make_project
+
+
+Module Contents
+---------------
+
+.. py:class:: TestTranslateExtension
+
+   .. py:method:: test_no_change_on_native()
+
+      No translation when extension is already native.
+
+
+
+   .. py:method:: test_so_to_pyd_on_windows(_mock)
+
+
+   .. py:method:: test_dylib_to_dll_on_windows(_mock)
+
+
+   .. py:method:: test_pyd_to_so_on_linux(_mock)
+
+
+   .. py:method:: test_dll_to_so_on_linux(_mock)
+
+
+   .. py:method:: test_pyd_to_so_on_darwin(_mock)
+
+
+   .. py:method:: test_dll_to_dylib_on_darwin(_mock)
+
+
+   .. py:method:: test_unrecognized_extension()
+
+
+   .. py:method:: test_no_extension()
+
+
+   .. py:method:: test_glob_pattern()
+
+      Glob patterns with extensions are also translated.
+
+
+
+.. py:class:: TestMatchesPattern
+
+   .. py:method:: test_exact_file()
+
+
+   .. py:method:: test_directory_prefix()
+
+
+   .. py:method:: test_directory_prefix_no_false_positive()
+
+
+   .. py:method:: test_glob_star()
+
+
+   .. py:method:: test_glob_full_path()
+
+
+   .. py:method:: test_no_match()
+
+
+   .. py:method:: test_basename_match()
+
+
+   .. py:method:: test_cross_platform_extension(_mock)
+
+      On Windows, pattern ``*.so`` should match ``*.pyd``.
+
+
+
+   .. py:method:: test_question_mark_glob()
+
+
+   .. py:method:: test_bracket_glob()
+
+
+   .. py:method:: test_dotfile()
+
+
+   .. py:method:: test_nested_directory_pattern()
+
+
+.. py:class:: TestCheckPresent
+
+   .. py:attribute:: FILES
+      :value: ['check_dist/__init__.py', 'check_dist/_core.py', 'LICENSE', 'pyproject.toml', 'README.md']
+
+
+
+   .. py:method:: test_all_present()
+
+
+   .. py:method:: test_missing_pattern()
+
+
+   .. py:method:: test_glob_present()
+
+
+   .. py:method:: test_empty_patterns()
+
+
+   .. py:method:: test_cross_platform_present(_mock)
+
+      Pattern '*.so' on Windows should look for '*.pyd'.
+
+
+
+   .. py:method:: test_cross_platform_missing(_mock)
+
+      Pattern '*.so' on Windows should fail if no .pyd found.
+
+
+
+.. py:class:: TestCheckAbsent
+
+   .. py:attribute:: FILES
+      :value: ['check_dist/__init__.py', 'Makefile', '.github/workflows/ci.yml', 'docs/index.md']
+
+
+
+   .. py:method:: test_unwanted_present()
+
+
+   .. py:method:: test_unwanted_directory()
+
+
+   .. py:method:: test_all_clean()
+
+
+   .. py:method:: test_empty_patterns()
+
+
+   .. py:method:: test_docs_directory()
+
+
+   .. py:method:: test_nested_in_present_pattern_skipped()
+
+      Files nested inside a 'present' dir are not flagged as absent.
+
+
+
+   .. py:method:: test_present_patterns_none_flags_all()
+
+      Without present_patterns, nested files are still flagged.
+
+
+
+.. py:class:: TestCheckWrongPlatformExtensions
+
+   .. py:method:: test_so_on_windows(_mock)
+
+
+   .. py:method:: test_pyd_on_linux(_mock)
+
+
+   .. py:method:: test_clean_on_linux(_mock)
+
+
+   .. py:method:: test_clean_on_darwin(_mock)
+
+
+.. py:class:: TestCheckSdistVsVcs
+
+   .. py:method:: test_matching()
+
+
+   .. py:method:: test_extra_in_sdist()
+
+
+   .. py:method:: test_missing_from_sdist()
+
+
+   .. py:method:: test_generated_files_ignored()
+
+
+   .. py:method:: test_egg_info_ignored()
+
+
+   .. py:method:: test_hatch_packages_filter()
+
+      When hatch sdist packages are set, only those should be expected.
+
+
+
+   .. py:method:: test_dotfiles_ignored_in_missing()
+
+
+   .. py:method:: test_artifacts_not_flagged_as_extra()
+
+      Build artifacts (e.g. .so) should not be flagged as extra.
+
+
+
+   .. py:method:: test_only_include_vcs_check()
+
+      only-include config should scope the VCS comparison.
+
+
+
+.. py:class:: TestMatchesHatchPattern
+
+   .. py:method:: test_exact_file()
+
+
+   .. py:method:: test_directory_prefix()
+
+
+   .. py:method:: test_rooted_pattern()
+
+
+   .. py:method:: test_no_match()
+
+
+   .. py:method:: test_glob()
+
+
+   .. py:method:: test_basename_match()
+
+
+.. py:class:: TestSdistExpectedFiles
+
+   Covers hatch semantics: packages, include, exclude, only-include,
+   force-include, sources, and their interactions.
+
+
+   .. py:attribute:: VCS
+      :value: ['pkg/__init__.py', 'pkg/core.py', 'rust/src/lib.rs', 'Cargo.toml', 'Cargo.lock',...
+
+
+
+   .. py:method:: test_no_hatch_config()
+
+
+   .. py:method:: test_only_include_exhaustive()
+
+
+   .. py:method:: test_packages_acts_as_only_include()
+
+
+   .. py:method:: test_packages_with_include()
+
+      packages + include: include is ignored (hatch treats packages
+      as only-include, making the walk 'explicit').
+
+
+
+   .. py:method:: test_include_filters_full_tree()
+
+
+   .. py:method:: test_exclude_with_only_include()
+
+
+   .. py:method:: test_exclude_with_packages()
+
+
+   .. py:method:: test_exclude_with_no_constraints()
+
+
+   .. py:method:: test_force_include_adds_files()
+
+
+   .. py:method:: test_force_include_survives_exclude()
+
+
+   .. py:method:: test_global_force_include_fallback()
+
+
+   .. py:method:: test_target_force_include_overrides_global()
+
+
+   .. py:method:: test_only_include_with_exclude()
+
+
+   .. py:method:: test_empty_config()
+
+
+.. py:class:: TestFilterExtrasByHatch
+
+   Verify that copier-derived extras are trimmed to match hatch config.
+
+
+   .. py:attribute:: EXTRAS
+      :value: ['rust', 'src', 'Cargo.toml', 'Cargo.lock', 'target']
+
+
+
+   .. py:method:: test_no_hatch_config()
+
+
+   .. py:method:: test_only_include_keeps_matching()
+
+
+   .. py:method:: test_packages_clears_root_extras()
+
+      When only packages is set, non-package extras are removed.
+
+
+
+   .. py:method:: test_packages_plus_include()
+
+      include is ignored when packages is set (explicit walk).
+
+
+
+   .. py:method:: test_include_only()
+
+
+   .. py:method:: test_force_include_destinations_kept()
+
+
+   .. py:method:: test_empty_extras()
+
+
+   .. py:method:: test_global_force_include()
+
+
+.. py:class:: TestLoadConfig
+
+   .. py:method:: test_missing_file(tmp_path)
+
+
+   .. py:method:: test_valid_config(tmp_path)
+
+
+   .. py:method:: test_partial_config(tmp_path)
+
+
+   .. py:method:: test_no_check_dist_section(tmp_path)
+
+
+.. py:class:: TestLoadHatchConfig
+
+   .. py:method:: test_missing_file(tmp_path)
+
+
+   .. py:method:: test_valid_config(tmp_path)
+
+
+.. py:class:: TestModuleNameFromProject
+
+   .. py:method:: test_spaces()
+
+
+   .. py:method:: test_hyphens()
+
+
+   .. py:method:: test_mixed()
+
+
+   .. py:method:: test_no_change()
+
+
+.. py:class:: TestLoadCopierConfig
+
+   .. py:method:: test_missing_file(tmp_path)
+
+
+   .. py:method:: test_valid_file(tmp_path)
+
+
+.. py:class:: TestCopierDefaults
+
+   .. py:method:: test_cpp()
+
+
+   .. py:method:: test_rust()
+
+
+   .. py:method:: test_js()
+
+
+   .. py:method:: test_unknown_extension()
+
+
+   .. py:method:: test_no_extension()
+
+
+   .. py:method:: test_no_project_name()
+
+
+   .. py:method:: test_common_patterns_present()
+
+
+.. py:class:: TestLoadConfigWithCopierFallback
+
+   .. py:method:: test_no_check_dist_section_uses_copier(tmp_path)
+
+      When pyproject.toml has no [tool.check-dist], copier defaults apply.
+
+
+
+   .. py:method:: test_explicit_config_takes_precedence(tmp_path)
+
+      When [tool.check-dist] exists, copier defaults are ignored.
+
+
+
+   .. py:method:: test_no_copier_file_returns_empty(tmp_path)
+
+
+.. py:class:: TestListSdistFiles
+
+   .. py:method:: test_tar_gz(tmp_path)
+
+
+   .. py:method:: test_zip(tmp_path)
+
+
+   .. py:method:: test_unknown_format(tmp_path)
+
+
+.. py:class:: TestListWheelFiles
+
+   .. py:method:: test_wheel(tmp_path)
+
+
+.. py:class:: TestFindDistFiles
+
+   .. py:method:: test_finds_both(tmp_path)
+
+
+   .. py:method:: test_finds_zip_sdist(tmp_path)
+
+
+   .. py:method:: test_empty_dir(tmp_path)
+
+
+   .. py:method:: test_nonexistent_dir(tmp_path)
+
+
+.. py:class:: TestFindPreBuilt
+
+   .. py:method:: test_finds_in_dist(tmp_path)
+
+
+   .. py:method:: test_finds_in_wheelhouse(tmp_path)
+
+
+   .. py:method:: test_prefers_dist_over_wheelhouse(tmp_path)
+
+
+   .. py:method:: test_none_when_empty(tmp_path)
+
+
+   .. py:method:: test_none_when_no_dirs(tmp_path)
+
+
+.. py:class:: TestGetVcsFiles
+
+   .. py:method:: test_in_git_repo(tmp_path)
+
+      Integration test: create a real tiny git repo.
+
+
+
+.. py:function:: _make_project(tmp_path: pathlib.Path, *, extra_files: dict[str, str] | None = None) -> pathlib.Path
+
+   Create a minimal hatch-based project for integration tests.
+
+
+.. py:class:: TestCheckDistIntegration
+
+   .. py:method:: test_clean_project_passes(tmp_path)
+
+
+   .. py:method:: test_missing_present_pattern(tmp_path)
+
+      A missing required file should cause failure.
+
+
+
+   .. py:method:: test_verbose_lists_files(tmp_path)
+
+
+.. py:class:: TestCLI
+
+   .. py:method:: test_help()
+
+

@@ -1,0 +1,184 @@
+check_dist
+==========
+
+.. py:module:: check_dist
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/check_dist/_cli/index
+   /autoapi/check_dist/_core/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   check_dist.__version__
+
+
+Exceptions
+----------
+
+.. autoapisummary::
+
+   check_dist.CheckDistError
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   check_dist.check_absent
+   check_dist.check_dist
+   check_dist.check_present
+   check_dist.check_sdist_vs_vcs
+   check_dist.check_wrong_platform_extensions
+   check_dist.copier_defaults
+   check_dist.find_dist_files
+   check_dist.get_vcs_files
+   check_dist.list_sdist_files
+   check_dist.list_wheel_files
+   check_dist.load_config
+   check_dist.load_copier_config
+   check_dist.load_hatch_config
+   check_dist.matches_pattern
+   check_dist.translate_extension
+
+
+Package Contents
+----------------
+
+.. py:data:: __version__
+   :value: '0.1.3'
+
+
+.. py:exception:: CheckDistError
+
+   Bases: :py:obj:`Exception`
+
+
+   Error raised when distribution checks fail.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+.. py:function:: check_absent(files: list[str], patterns: list[str], dist_type: str, *, present_patterns: list[str] | None = None) -> list[str]
+
+   Return error strings for any *patterns* found in *files*.
+
+   When *present_patterns* is given, files nested inside a directory
+   that matches a present pattern are not flagged.  This avoids false
+   positives like ``lerna/tests/fake_package/pyproject.toml`` being
+   flagged as unwanted when ``lerna`` is a required present pattern.
+
+
+.. py:function:: check_dist(source_dir: str = '.', *, no_isolation: bool = False, verbose: bool = False, pre_built: str | None = None, rebuild: bool = False) -> tuple[bool, list[str]]
+
+   Run all distribution checks.
+
+   :param source_dir: Path to the project root.
+   :param no_isolation: Passed to ``python -m build --no-isolation``.
+   :param verbose: List every file in each distribution.
+   :param pre_built: If given, skip building and use existing dist files from this
+                     directory.  Useful when native toolchains have already produced
+                     the archives.
+   :param rebuild: Force a fresh build even when pre-built distributions exist in
+                   ``dist/`` or ``wheelhouse/``.
+   :param Returns ``(success:
+   :param messages)``.:
+
+
+.. py:function:: check_present(files: list[str], patterns: list[str], dist_type: str) -> list[str]
+
+   Return error strings for any *patterns* not found in *files*.
+
+
+.. py:function:: check_sdist_vs_vcs(sdist_files: list[str], vcs_files: list[str], hatch_config: dict, sdist_absent: list[str] | None = None) -> list[str]
+
+   Compare sdist contents against VCS-tracked files.
+
+
+.. py:function:: check_wrong_platform_extensions(files: list[str], dist_type: str) -> list[str]
+
+   Flag files that use an extension from another platform.
+
+
+.. py:function:: copier_defaults(copier_config: dict, hatch_config: dict | None = None) -> dict | None
+
+   Derive default check-dist config from copier answers.
+
+   Returns a config dict with the same shape as ``load_config`` output,
+   or ``None`` if deriving defaults is not possible (no ``add_extension``
+   key, or unknown extension type).
+
+   When *hatch_config* is provided, ``sdist_present_extra`` patterns are
+   filtered against the hatch sdist configuration to only require paths
+   that will actually appear in the archive.  Follows hatch precedence:
+   ``only-include`` (exhaustive) > ``packages`` (used as ``only-include``
+   fallback) > ``include`` (filter on full tree).
+
+
+.. py:function:: find_dist_files(output_dir: str) -> tuple[str | None, str | None]
+
+   Return ``(sdist_path, wheel_path)`` found in *output_dir*.
+
+
+.. py:function:: get_vcs_files(source_dir: str) -> list[str]
+
+   Return files tracked by git in *source_dir*.
+
+
+.. py:function:: list_sdist_files(sdist_path: str) -> list[str]
+
+   List files inside an sdist, stripping the top-level directory.
+
+
+.. py:function:: list_wheel_files(wheel_path: str) -> list[str]
+
+   List files inside a wheel.
+
+
+.. py:function:: load_config(pyproject_path: str | pathlib.Path = 'pyproject.toml', *, source_dir: str | pathlib.Path | None = None) -> dict
+
+   Load ``[tool.check-dist]`` configuration from *pyproject.toml*.
+
+   If no ``[tool.check-dist]`` section exists and *source_dir* contains a
+   ``.copier-answers.yaml`` with an ``add_extension`` key, sensible
+   defaults are derived from the copier template answers.
+
+
+.. py:function:: load_copier_config(source_dir: str | pathlib.Path) -> dict
+
+   Load ``.copier-answers.yaml`` from *source_dir*, if it exists.
+
+
+.. py:function:: load_hatch_config(pyproject_path: str | pathlib.Path = 'pyproject.toml') -> dict
+
+   Load ``[tool.hatch.build]`` configuration from *pyproject.toml*.
+
+
+.. py:function:: matches_pattern(filepath: str, pattern: str) -> bool
+
+   Check whether *filepath* matches *pattern*.
+
+   * A bare name like ``check_dist`` matches any file whose path starts
+     with ``check_dist/``.
+   * Glob wildcards (``*``, ``?``, ``[…]``) are matched against both the
+     full path and the basename.
+   * Extensions are translated to the current platform before matching.
+
+
+.. py:function:: translate_extension(pattern: str) -> str
+
+   Translate file extensions to the current platform's convention.
+
+   For example, if a user specifies ``*.so`` on Windows, this returns ``*.pyd``.
+
+
