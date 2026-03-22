@@ -633,6 +633,10 @@ def check_sdist_vs_vcs(
     # Artifacts are built files not in VCS but expected in dists
     artifacts = hatch_config.get("artifacts", [])
 
+    # There are also artifact sections in sdist and wheel config that should be considered when comparing against VCS
+    sdist_artifacts = hatch_config.get("targets", {}).get("sdist", {}).get("artifacts", [])
+    artifacts.extend(sdist_artifacts)
+
     # "Extra" = files in sdist that are neither VCS-tracked nor
     # generated artifacts.  This catches truly stray files.
     extra = sorted(sdist_set - vcs_set)
