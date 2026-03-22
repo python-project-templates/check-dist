@@ -328,6 +328,14 @@ class TestCheckSdistVsVcs:
         errors = check_sdist_vs_vcs(sdist, vcs, hatch)
         assert errors == []
 
+    def test_artifacts_in_sdist_section(self):
+        """Artifacts listed in hatch sdist config should also be ignored."""
+        sdist = ["pkg/extension/index.js", "pkg/__init__.py", "pyproject.toml"]
+        vcs = ["pkg/__init__.py", "pyproject.toml"]
+        hatch = {"targets": {"sdist": {"artifacts": ["pkg/extension"]}}}
+        errors = check_sdist_vs_vcs(sdist, vcs, hatch)
+        assert errors == []
+
     def test_only_include_vcs_check(self):
         """only-include config should scope the VCS comparison."""
         sdist = ["pkg/__init__.py", "rust/lib.rs", "Cargo.toml", "pyproject.toml"]
