@@ -19,6 +19,8 @@ from check_dist._core import (
     _find_pre_built,
     _matches_hatch_pattern,
     _module_name_from_project,
+    _normalize_name,
+    _resolve_module_from_hatch,
     _sdist_expected_files,
     check_absent,
     check_dist,
@@ -36,8 +38,6 @@ from check_dist._core import (
     matches_pattern,
     translate_extension,
 )
-
-# ── translate_extension ───────────────────────────────────────────────
 
 
 class TestTranslateExtension:
@@ -86,9 +86,6 @@ class TestTranslateExtension:
             assert translate_extension("*.so") == "*.pyd"
 
 
-# ── matches_pattern ───────────────────────────────────────────────────
-
-
 class TestMatchesPattern:
     def test_exact_file(self):
         assert matches_pattern("LICENSE", "LICENSE")
@@ -129,9 +126,6 @@ class TestMatchesPattern:
 
     def test_nested_directory_pattern(self):
         assert matches_pattern(".github/workflows/ci.yml", ".github")
-
-
-# ── check_present / check_absent ─────────────────────────────────────
 
 
 class TestCheckPresent:
@@ -236,9 +230,6 @@ class TestCheckAbsent:
         assert "lerna/tests/fake_package/pyproject.toml" in errors[0]
 
 
-# ── check_wrong_platform_extensions ──────────────────────────────────
-
-
 class TestCheckWrongPlatformExtensions:
     @patch("check_dist._core._get_platform_key", return_value="win32")
     def test_so_on_windows(self, _mock):
@@ -265,9 +256,6 @@ class TestCheckWrongPlatformExtensions:
         files = ["mypackage/ext.so", "mypackage/__init__.py"]
         errors = check_wrong_platform_extensions(files, "wheel")
         assert errors == []
-
-
-# ── check_sdist_vs_vcs ───────────────────────────────────────────────
 
 
 class TestCheckSdistVsVcs:
@@ -345,9 +333,6 @@ class TestCheckSdistVsVcs:
         assert errors == []
 
 
-# ── _sdist_expected_files ────────────────────────────────────────────
-
-
 class TestMatchesHatchPattern:
     def test_exact_file(self):
         assert _matches_hatch_pattern("Cargo.toml", "Cargo.toml")
@@ -389,8 +374,6 @@ class TestSdistExpectedFiles:
         result = _sdist_expected_files(self.VCS, {})
         assert result == set(self.VCS)
 
-    # ── only-include ─────────────────────────────────────────────
-
     def test_only_include_exhaustive(self):
         hatch = {"targets": {"sdist": {"only-include": ["pkg", "rust", "Cargo.toml"]}}}
         result = _sdist_expected_files(self.VCS, hatch)
@@ -401,8 +384,6 @@ class TestSdistExpectedFiles:
         assert "Cargo.lock" not in result
         assert "tests/test_pkg.py" not in result
         assert "docs/index.md" not in result
-
-    # ── packages (acts as only-include fallback) ─────────────────
 
     def test_packages_acts_as_only_include(self):
         hatch = {"targets": {"sdist": {"packages": ["pkg"]}}}
@@ -433,8 +414,6 @@ class TestSdistExpectedFiles:
         assert "rust/src/lib.rs" not in result
         assert "tests/test_pkg.py" not in result
 
-    # ── include (no packages, no only-include) ───────────────────
-
     def test_include_filters_full_tree(self):
         hatch = {"targets": {"sdist": {"include": ["pkg", "Cargo.toml"]}}}
         result = _sdist_expected_files(self.VCS, hatch)
@@ -442,8 +421,6 @@ class TestSdistExpectedFiles:
         assert "Cargo.toml" in result
         assert "rust/src/lib.rs" not in result
         assert "tests/test_pkg.py" not in result
-
-    # ── exclude ──────────────────────────────────────────────────
 
     def test_exclude_with_only_include(self):
         hatch = {
@@ -479,8 +456,6 @@ class TestSdistExpectedFiles:
         result = _sdist_expected_files(self.VCS, hatch)
         assert "pkg/__init__.py" in result
         assert "docs/index.md" not in result
-
-    # ── force-include ────────────────────────────────────────────
 
     def test_force_include_adds_files(self):
         hatch = {
@@ -535,8 +510,6 @@ class TestSdistExpectedFiles:
         # global force-include is overridden by target-level
         assert "global.txt" not in result
 
-    # ── combined scenarios ───────────────────────────────────────
-
     def test_only_include_with_exclude(self):
         hatch = {
             "targets": {
@@ -556,9 +529,6 @@ class TestSdistExpectedFiles:
     def test_empty_config(self):
         result = _sdist_expected_files(self.VCS, {"targets": {"sdist": {}}})
         assert result == set(self.VCS)
-
-
-# ── _filter_extras_by_hatch ──────────────────────────────────────────
 
 
 class TestFilterExtrasByHatch:
@@ -631,9 +601,6 @@ class TestFilterExtrasByHatch:
         assert "rust" not in result
 
 
-# ── load_config ───────────────────────────────────────────────────────
-
-
 class TestLoadConfig:
     def test_missing_file(self, tmp_path):
         cfg = load_config(tmp_path / "nonexistent.toml")
@@ -699,9 +666,6 @@ class TestLoadHatchConfig:
         assert cfg["targets"]["sdist"]["packages"] == ["mylib"]
 
 
-# ── Copier defaults ──────────────────────────────────────────────────
-
-
 class TestModuleNameFromProject:
     def test_spaces(self):
         assert _module_name_from_project("python template js") == "python_template_js"
@@ -714,6 +678,81 @@ class TestModuleNameFromProject:
 
     def test_no_change(self):
         assert _module_name_from_project("mypkg") == "mypkg"
+
+
+class TestNormalizeName:
+    def test_underscores(self):
+        assert _normalize_name("jupyter_fs") == "jupyterfs"
+
+    def test_hyphens(self):
+        assert _normalize_name("jupyter-fs") == "jupyterfs"
+
+    def test_periods(self):
+        assert _normalize_name("jupyter.fs") == "jupyterfs"
+
+    def test_mixed(self):
+        assert _normalize_name("my_pkg-name.ext") == "mypkgnameext"
+
+    def test_no_separators(self):
+        assert _normalize_name("mypkg") == "mypkg"
+
+    def test_case_insensitive(self):
+        assert _normalize_name("MyPkg") == "mypkg"
+
+
+class TestResolveModuleFromHatch:
+    def test_wheel_packages_match(self):
+        hatch = {"targets": {"wheel": {"packages": ["jupyterfs"]}}}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyterfs"
+
+    def test_sdist_packages_match(self):
+        hatch = {"targets": {"sdist": {"packages": ["jupyterfs", "js"]}}}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyterfs"
+
+    def test_no_match_returns_original(self):
+        hatch = {"targets": {"wheel": {"packages": ["otherpkg"]}}}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyter_fs"
+
+    def test_empty_hatch_config(self):
+        assert _resolve_module_from_hatch("jupyter_fs", {}) == "jupyter_fs"
+
+    def test_exact_match_unchanged(self):
+        hatch = {"targets": {"wheel": {"packages": ["my_project"]}}}
+        assert _resolve_module_from_hatch("my_project", hatch) == "my_project"
+
+    def test_only_include_match(self):
+        hatch = {"targets": {"wheel": {"only-include": ["jupyterfs"]}}}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyterfs"
+
+    def test_top_level_packages(self):
+        hatch = {"packages": ["jupyterfs"]}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyterfs"
+
+    def test_period_variant(self):
+        hatch = {"targets": {"wheel": {"packages": ["my.pkg"]}}}
+        assert _resolve_module_from_hatch("my_pkg", hatch) == "my.pkg"
+
+
+class TestCopierDefaultsWithHatchModuleResolution:
+    def test_hatch_resolves_module_name(self):
+        hatch = {"targets": {"wheel": {"packages": ["jupyterfs"]}}}
+        cfg = copier_defaults(
+            {"add_extension": "jupyter", "project_name": "jupyter-fs"},
+            hatch_config=hatch,
+        )
+        assert cfg is not None
+        assert "jupyterfs" in cfg["sdist"]["present"]
+        assert "jupyterfs" in cfg["wheel"]["present"]
+        assert "jupyter_fs" not in cfg["sdist"]["present"]
+        assert "jupyter_fs" not in cfg["wheel"]["present"]
+
+    def test_no_hatch_uses_default_module(self):
+        cfg = copier_defaults(
+            {"add_extension": "jupyter", "project_name": "jupyter-fs"},
+        )
+        assert cfg is not None
+        assert "jupyter_fs" in cfg["sdist"]["present"]
+        assert "jupyter_fs" in cfg["wheel"]["present"]
 
 
 class TestLoadCopierConfig:
@@ -800,9 +839,6 @@ class TestLoadConfigWithCopierFallback:
         assert cfg["wheel"]["present"] == []
 
 
-# ── list_sdist_files ──────────────────────────────────────────────────
-
-
 class TestListSdistFiles:
     def test_tar_gz(self, tmp_path):
         archive = tmp_path / "pkg-1.0.tar.gz"
@@ -834,9 +870,6 @@ class TestListSdistFiles:
             list_sdist_files(str(archive))
 
 
-# ── list_wheel_files ──────────────────────────────────────────────────
-
-
 class TestListWheelFiles:
     def test_wheel(self, tmp_path):
         archive = tmp_path / "pkg-1.0-py3-none-any.whl"
@@ -846,9 +879,6 @@ class TestListWheelFiles:
 
         files = list_wheel_files(str(archive))
         assert files == ["pkg-1.0.dist-info/METADATA", "pkg/__init__.py"]
-
-
-# ── find_dist_files ───────────────────────────────────────────────────
 
 
 class TestFindDistFiles:
@@ -906,9 +936,6 @@ class TestFindPreBuilt:
         assert _find_pre_built(str(tmp_path)) is None
 
 
-# ── get_vcs_files ─────────────────────────────────────────────────────
-
-
 class TestGetVcsFiles:
     def test_in_git_repo(self, tmp_path):
         """Integration test: create a real tiny git repo."""
@@ -921,9 +948,6 @@ class TestGetVcsFiles:
 
         files = get_vcs_files(str(tmp_path))
         assert "hello.py" in files
-
-
-# ── Integration: check_dist ──────────────────────────────────────────
 
 
 def _make_project(tmp_path: Path, *, extra_files: dict[str, str] | None = None) -> Path:
@@ -1007,9 +1031,6 @@ class TestCheckDistIntegration:
         combined = "\n".join(messages)
         # Verbose mode should list individual files
         assert "mypkg/__init__.py" in combined
-
-
-# ── CLI smoke test ────────────────────────────────────────────────────
 
 
 class TestCLI:
