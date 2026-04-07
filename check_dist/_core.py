@@ -215,6 +215,39 @@ def _module_name_from_project(project_name: str) -> str:
     return re.sub(r"[\s-]+", "_", project_name).strip("_")
 
 
+def _normalize_name(name: str) -> str:
+    """Normalize a name by stripping underscores, hyphens, and periods."""
+    return re.sub(r"[-_.]+", "", name).lower()
+
+
+def _resolve_module_from_hatch(module: str, hatch_config: dict) -> str:
+    """Resolve the module name from hatch packages configuration.
+
+    If any package in the hatch sdist or wheel ``packages`` (or
+    ``only-include``) is equivalent to *module* after normalizing away
+    underscores, hyphens, and periods, return that package name instead.
+    This handles projects where the distribution name differs from the
+    importable package name (e.g. ``jupyter-fs`` vs ``jupyterfs``).
+    """
+    norm = _normalize_name(module)
+    candidates: list[str] = []
+    for target in ("sdist", "wheel"):
+        target_cfg = hatch_config.get("targets", {}).get(target, {})
+        for key in ("only-include", "packages"):
+            vals = target_cfg.get(key)
+            if vals:
+                candidates.extend(vals)
+    # Also check top-level packages / only-include
+    for key in ("only-include", "packages"):
+        vals = hatch_config.get(key)
+        if vals:
+            candidates.extend(vals)
+    for candidate in candidates:
+        if _normalize_name(candidate) == norm:
+            return candidate
+    return module
+
+
 def copier_defaults(copier_config: dict, hatch_config: dict | None = None) -> dict | None:
     """Derive default check-dist config from copier answers.
 
@@ -238,6 +271,8 @@ def copier_defaults(copier_config: dict, hatch_config: dict | None = None) -> di
         return None
 
     module = _module_name_from_project(project_name)
+    if hatch_config:
+        module = _resolve_module_from_hatch(module, hatch_config)
 
     sdist_present_extra = list(ext_defaults.get("sdist_present_extra", []))
 

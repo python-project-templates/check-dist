@@ -19,6 +19,8 @@ from check_dist._core import (
     _find_pre_built,
     _matches_hatch_pattern,
     _module_name_from_project,
+    _normalize_name,
+    _resolve_module_from_hatch,
     _sdist_expected_files,
     check_absent,
     check_dist,
@@ -676,6 +678,81 @@ class TestModuleNameFromProject:
 
     def test_no_change(self):
         assert _module_name_from_project("mypkg") == "mypkg"
+
+
+class TestNormalizeName:
+    def test_underscores(self):
+        assert _normalize_name("jupyter_fs") == "jupyterfs"
+
+    def test_hyphens(self):
+        assert _normalize_name("jupyter-fs") == "jupyterfs"
+
+    def test_periods(self):
+        assert _normalize_name("jupyter.fs") == "jupyterfs"
+
+    def test_mixed(self):
+        assert _normalize_name("my_pkg-name.ext") == "mypkgnameext"
+
+    def test_no_separators(self):
+        assert _normalize_name("mypkg") == "mypkg"
+
+    def test_case_insensitive(self):
+        assert _normalize_name("MyPkg") == "mypkg"
+
+
+class TestResolveModuleFromHatch:
+    def test_wheel_packages_match(self):
+        hatch = {"targets": {"wheel": {"packages": ["jupyterfs"]}}}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyterfs"
+
+    def test_sdist_packages_match(self):
+        hatch = {"targets": {"sdist": {"packages": ["jupyterfs", "js"]}}}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyterfs"
+
+    def test_no_match_returns_original(self):
+        hatch = {"targets": {"wheel": {"packages": ["otherpkg"]}}}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyter_fs"
+
+    def test_empty_hatch_config(self):
+        assert _resolve_module_from_hatch("jupyter_fs", {}) == "jupyter_fs"
+
+    def test_exact_match_unchanged(self):
+        hatch = {"targets": {"wheel": {"packages": ["my_project"]}}}
+        assert _resolve_module_from_hatch("my_project", hatch) == "my_project"
+
+    def test_only_include_match(self):
+        hatch = {"targets": {"wheel": {"only-include": ["jupyterfs"]}}}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyterfs"
+
+    def test_top_level_packages(self):
+        hatch = {"packages": ["jupyterfs"]}
+        assert _resolve_module_from_hatch("jupyter_fs", hatch) == "jupyterfs"
+
+    def test_period_variant(self):
+        hatch = {"targets": {"wheel": {"packages": ["my.pkg"]}}}
+        assert _resolve_module_from_hatch("my_pkg", hatch) == "my.pkg"
+
+
+class TestCopierDefaultsWithHatchModuleResolution:
+    def test_hatch_resolves_module_name(self):
+        hatch = {"targets": {"wheel": {"packages": ["jupyterfs"]}}}
+        cfg = copier_defaults(
+            {"add_extension": "jupyter", "project_name": "jupyter-fs"},
+            hatch_config=hatch,
+        )
+        assert cfg is not None
+        assert "jupyterfs" in cfg["sdist"]["present"]
+        assert "jupyterfs" in cfg["wheel"]["present"]
+        assert "jupyter_fs" not in cfg["sdist"]["present"]
+        assert "jupyter_fs" not in cfg["wheel"]["present"]
+
+    def test_no_hatch_uses_default_module(self):
+        cfg = copier_defaults(
+            {"add_extension": "jupyter", "project_name": "jupyter-fs"},
+        )
+        assert cfg is not None
+        assert "jupyter_fs" in cfg["sdist"]["present"]
+        assert "jupyter_fs" in cfg["wheel"]["present"]
 
 
 class TestLoadCopierConfig:
