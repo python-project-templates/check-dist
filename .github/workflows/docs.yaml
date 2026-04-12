@@ -1,33 +1,20 @@
 name: Docs
 on:
-<<<<<<< before updating
-  push:
-    branches: ["main"]
-    tags: ["v*"]
-=======
   workflow_run:
     workflows: ["Build Status"]
     branches: [main]
     types: [completed]
->>>>>>> after updating
   workflow_dispatch:
 
 permissions:
-<<<<<<< before updating
-    contents: write
-=======
   actions: read
   contents: write
 
->>>>>>> after updating
 jobs:
   docs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     steps:
-<<<<<<< before updating
-      - uses: actions-ext/yardang@main
-=======
       - uses: actions/checkout@v6
       - uses: actions-ext/python/setup@main
 
@@ -57,6 +44,5 @@ jobs:
       - run: yardang build
 
       - uses: peaceiris/actions-gh-pages@v4
->>>>>>> after updating
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
