@@ -9,15 +9,11 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import tomllib
 import zipfile
 from pathlib import Path
 
 import yaml
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib
 
 
 class CheckDistError(Exception):
@@ -351,7 +347,7 @@ def build_dists(source_dir: str, output_dir: str, *, no_isolation: bool = False)
         cmd.insert(-1, "--no-isolation")
     cmd.append(source_dir)
 
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode == 0:
         return warnings
 
@@ -364,7 +360,7 @@ def build_dists(source_dir: str, output_dir: str, *, no_isolation: bool = False)
         if no_isolation:
             cmd.insert(-1, "--no-isolation")
         cmd.append(source_dir)
-        r = subprocess.run(cmd, capture_output=True, text=True)
+        r = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if r.returncode == 0:
             built_any = True
         else:
@@ -442,6 +438,7 @@ def get_vcs_files(source_dir: str) -> list[str]:
             capture_output=True,
             text=True,
             cwd=source_dir,
+            check=False,
         )
     except FileNotFoundError:
         raise CheckDistError("git not found – only git is currently supported for VCS tracking")
@@ -472,10 +469,7 @@ def matches_pattern(filepath: str, pattern: str) -> bool:
 
     if fnmatch.fnmatch(filepath, translated):
         return True
-    if fnmatch.fnmatch(os.path.basename(filepath), translated):
-        return True
-
-    return False
+    return fnmatch.fnmatch(os.path.basename(filepath), translated)
 
 
 def _matches_hatch_pattern(filepath: str, pattern: str) -> bool:
@@ -495,9 +489,7 @@ def _matches_hatch_pattern(filepath: str, pattern: str) -> bool:
         return True
     if fnmatch.fnmatch(filepath, pat):
         return True
-    if fnmatch.fnmatch(os.path.basename(filepath), pat):
-        return True
-    return False
+    return fnmatch.fnmatch(os.path.basename(filepath), pat)
 
 
 def check_present(files: list[str], patterns: list[str], dist_type: str) -> list[str]:
