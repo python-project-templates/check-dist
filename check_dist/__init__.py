@@ -1,6 +1,6 @@
 __version__ = "0.1.5"
 
-from ._core import (  # noqa: F401
+from ._core import (
     CheckDistError,
     check_absent,
     check_dist,
