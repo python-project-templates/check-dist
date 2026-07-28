@@ -9,6 +9,7 @@ import tarfile
 import textwrap
 import zipfile
 from pathlib import Path
+from typing import ClassVar
 from unittest.mock import patch
 
 import pytest
@@ -43,9 +44,7 @@ from check_dist._core import (
 class TestTranslateExtension:
     def test_no_change_on_native(self):
         """No translation when extension is already native."""
-        if sys.platform == "linux":
-            assert translate_extension("foo.so") == "foo.so"
-        elif sys.platform == "darwin":
+        if sys.platform in ("linux", "darwin"):
             assert translate_extension("foo.so") == "foo.so"
         elif sys.platform == "win32":
             assert translate_extension("foo.pyd") == "foo.pyd"
@@ -129,7 +128,7 @@ class TestMatchesPattern:
 
 
 class TestCheckPresent:
-    FILES = [
+    FILES: ClassVar[list[str]] = [
         "check_dist/__init__.py",
         "check_dist/_core.py",
         "LICENSE",
@@ -170,7 +169,7 @@ class TestCheckPresent:
 
 
 class TestCheckAbsent:
-    FILES = [
+    FILES: ClassVar[list[str]] = [
         "check_dist/__init__.py",
         "Makefile",
         ".github/workflows/ci.yml",
@@ -357,7 +356,7 @@ class TestSdistExpectedFiles:
     """Covers hatch semantics: packages, include, exclude, only-include,
     force-include, sources, and their interactions."""
 
-    VCS = [
+    VCS: ClassVar[list[str]] = [
         "pkg/__init__.py",
         "pkg/core.py",
         "rust/src/lib.rs",
@@ -534,7 +533,7 @@ class TestSdistExpectedFiles:
 class TestFilterExtrasByHatch:
     """Verify that copier-derived extras are trimmed to match hatch config."""
 
-    EXTRAS = ["rust", "src", "Cargo.toml", "Cargo.lock", "target"]
+    EXTRAS: ClassVar[list[str]] = ["rust", "src", "Cargo.toml", "Cargo.lock", "target"]
 
     def test_no_hatch_config(self):
         assert _filter_extras_by_hatch(self.EXTRAS, {}) == self.EXTRAS
@@ -940,8 +939,8 @@ class TestGetVcsFiles:
     def test_in_git_repo(self, tmp_path):
         """Integration test: create a real tiny git repo."""
         subprocess.run(["git", "init", str(tmp_path)], capture_output=True, check=True)
-        subprocess.run(["git", "config", "user.email", "test@test.com"], cwd=str(tmp_path), capture_output=True)
-        subprocess.run(["git", "config", "user.name", "Test"], cwd=str(tmp_path), capture_output=True)
+        subprocess.run(["git", "config", "user.email", "test@test.com"], cwd=str(tmp_path), capture_output=True, check=False)
+        subprocess.run(["git", "config", "user.name", "Test"], cwd=str(tmp_path), capture_output=True, check=False)
         (tmp_path / "hello.py").write_text("print('hi')\n")
         subprocess.run(["git", "add", "hello.py"], cwd=str(tmp_path), capture_output=True, check=True)
         subprocess.run(["git", "commit", "-m", "init"], cwd=str(tmp_path), capture_output=True, check=True)
@@ -992,8 +991,8 @@ def _make_project(tmp_path: Path, *, extra_files: dict[str, str] | None = None) 
 
     # Set up a git repo so VCS checks work
     subprocess.run(["git", "init", str(proj)], capture_output=True, check=True)
-    subprocess.run(["git", "config", "user.email", "t@t.com"], cwd=str(proj), capture_output=True)
-    subprocess.run(["git", "config", "user.name", "T"], cwd=str(proj), capture_output=True)
+    subprocess.run(["git", "config", "user.email", "t@t.com"], cwd=str(proj), capture_output=True, check=False)
+    subprocess.run(["git", "config", "user.name", "T"], cwd=str(proj), capture_output=True, check=False)
     subprocess.run(["git", "add", "."], cwd=str(proj), capture_output=True, check=True)
     subprocess.run(["git", "commit", "-m", "init"], cwd=str(proj), capture_output=True, check=True)
     return proj
@@ -1027,7 +1026,7 @@ class TestCheckDistIntegration:
     @pytest.mark.slow
     def test_verbose_lists_files(self, tmp_path):
         proj = _make_project(tmp_path)
-        success, messages = check_dist(str(proj), verbose=True)
+        _success, messages = check_dist(str(proj), verbose=True)
         combined = "\n".join(messages)
         # Verbose mode should list individual files
         assert "mypkg/__init__.py" in combined
@@ -1039,6 +1038,7 @@ class TestCLI:
             [sys.executable, "-m", "check_dist._cli", "--help"],
             capture_output=True,
             text=True,
+            check=False,
         )
         assert result.returncode == 0
         assert "check-dist" in result.stdout.lower() or "Check Python" in result.stdout
