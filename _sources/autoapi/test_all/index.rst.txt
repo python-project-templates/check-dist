@@ -134,6 +134,7 @@ Module Contents
 .. py:class:: TestCheckPresent
 
    .. py:attribute:: FILES
+      :type:  ClassVar[list[str]]
       :value: ['check_dist/__init__.py', 'check_dist/_core.py', 'LICENSE', 'pyproject.toml', 'README.md']
 
 
@@ -165,6 +166,7 @@ Module Contents
 .. py:class:: TestCheckAbsent
 
    .. py:attribute:: FILES
+      :type:  ClassVar[list[str]]
       :value: ['check_dist/__init__.py', 'Makefile', '.github/workflows/ci.yml', 'docs/index.md']
 
 
@@ -281,6 +283,7 @@ Module Contents
 
 
    .. py:attribute:: VCS
+      :type:  ClassVar[list[str]]
       :value: ['pkg/__init__.py', 'pkg/core.py', 'rust/src/lib.rs', 'Cargo.toml', 'Cargo.lock',...
 
 
@@ -337,6 +340,7 @@ Module Contents
 
 
    .. py:attribute:: EXTRAS
+      :type:  ClassVar[list[str]]
       :value: ['rust', 'src', 'Cargo.toml', 'Cargo.lock', 'target']
 
 
