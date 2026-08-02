@@ -1,4 +1,8 @@
+<<<<<<< before updating
 """Comprehensive tests for check_dist."""
+=======
+from check_dist import *
+>>>>>>> after updating
 
 from __future__ import annotations
 
