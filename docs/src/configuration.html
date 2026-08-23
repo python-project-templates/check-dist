@@ -323,33 +323,33 @@ check-dist
 <h3>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h3>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.check-dist.sdist]</span>
 <span class="n">present</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;my_package&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;LICENSE&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;README.md&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"my_package"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"LICENSE"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"pyproject.toml"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"README.md"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">absent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;.gitignore&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;.copier-answers.yaml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Makefile&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;.github&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;dist&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;docs&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">".gitignore"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">".copier-answers.yaml"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Makefile"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">".github"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"dist"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"docs"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="k">[tool.check-dist.wheel]</span>
 <span class="n">present</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;my_package&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;LICENSE&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"my_package"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"LICENSE"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">absent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;.gitignore&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;.copier-answers.yaml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Makefile&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;.github&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;dist&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;docs&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">".gitignore"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">".copier-answers.yaml"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Makefile"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"pyproject.toml"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">".github"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"dist"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"docs"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 </div>
@@ -429,20 +429,20 @@ check-dist
 <p>When your project uses <a class="reference external" href="https://hatch.pypa.io/">Hatch</a> as the build backend,
 <code class="docutils literal notranslate"><span class="pre">check-dist</span></code> reads <code class="docutils literal notranslate"><span class="pre">[tool.hatch.build.targets.sdist]</span></code> to decide which VCS-tracked files are expected in the sdist. For example, if your configuration says:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.hatch.build.targets.sdist]</span>
-<span class="n">packages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;my_package&quot;</span><span class="p">]</span>
+<span class="n">packages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"my_package"</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>then only files under <code class="docutils literal notranslate"><span class="pre">my_package/</span></code> are expected in the sdist, and VCS-tracked files outside those packages will not be flagged as missing.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">only-include</span></code> directive is also supported:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.hatch.build.targets.sdist]</span>
 <span class="n">only-include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;my_package&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;rust&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;src&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Cargo.toml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Cargo.lock&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"my_package"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"rust"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"src"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Cargo.toml"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Cargo.lock"</span><span class="p">,</span>
 <span class="p">]</span>
-<span class="n">exclude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span>
+<span class="n">exclude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"target"</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>This tells <code class="docutils literal notranslate"><span class="pre">check-dist</span></code> that the sdist should contain files from the listed paths, minus any excluded patterns.</p>
@@ -525,7 +525,7 @@ dist was produced and warn about the failed build.</p>
 <p>You can also use <code class="docutils literal notranslate"><span class="pre">check-dist</span></code> programmatically:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">check_dist</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_dist</span>
 
-<span class="n">success</span><span class="p">,</span> <span class="n">messages</span> <span class="o">=</span> <span class="n">check_dist</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">success</span><span class="p">,</span> <span class="n">messages</span> <span class="o">=</span> <span class="n">check_dist</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 </pre></div>
