@@ -448,7 +448,7 @@ check-dist
 </div>
 <p>This tells <code class="docutils literal notranslate"><span class="pre">check-dist</span></code> that the sdist should contain files from the listed paths, minus any excluded patterns.</p>
 <blockquote>
-<div><p><strong>Note:</strong> Hatchling force-includes VCS exclusion files (e.g. <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>) in sdists regardless of exclude rules.  Do not add <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> to your <code class="docutils literal notranslate"><span class="pre">absent</span></code> list for sdist checks.</p>
+<div><p><strong>Note:</strong> Hatchling force-includes VCS exclusion files (e.g. <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>) in sdists regardless of exclude rules. Do not add <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> to your <code class="docutils literal notranslate"><span class="pre">absent</span></code> list for sdist checks.</p>
 </div></blockquote>
 </section>
 <section id="copier-template-defaults">
@@ -489,7 +489,7 @@ check-dist
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">--pre-built</span></code> flag is useful when you have an existing build pipeline
 that produces the sdist and wheel (e.g. projects with complex native
-toolchains like Rust + WASM or C++ + Emscripten).  Point it at the
+toolchains like Rust + WASM or C++ + Emscripten). Point it at the
 directory containing the <code class="docutils literal notranslate"><span class="pre">.tar.gz</span></code> and <code class="docutils literal notranslate"><span class="pre">.whl</span></code> files:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>check-dist<span class="w"> </span>--pre-built<span class="w"> </span>dist/
 </pre></div>
@@ -533,7 +533,7 @@ dist was produced and warn about the failed build.</p>
 </div>
 <p>Key functions exposed from <code class="docutils literal notranslate"><span class="pre">check_dist</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">check_dist(source_dir,</span> <span class="pre">*,</span> <span class="pre">no_isolation=False,</span> <span class="pre">verbose=False,</span> <span class="pre">pre_built=None)</span></code> — run all checks, returns <code class="docutils literal notranslate"><span class="pre">(bool,</span> <span class="pre">list[str])</span></code>.  Pass <code class="docutils literal notranslate"><span class="pre">pre_built=&quot;dist/&quot;</span></code> to skip building.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">check_dist(source_dir,</span> <span class="pre">*,</span> <span class="pre">no_isolation=False,</span> <span class="pre">verbose=False,</span> <span class="pre">pre_built=None)</span></code> — run all checks, returns <code class="docutils literal notranslate"><span class="pre">(bool,</span> <span class="pre">list[str])</span></code>. Pass <code class="docutils literal notranslate"><span class="pre">pre_built=&quot;dist/&quot;</span></code> to skip building.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">load_config(pyproject_path,</span> <span class="pre">*,</span> <span class="pre">source_dir=None)</span></code> — load <code class="docutils literal notranslate"><span class="pre">[tool.check-dist]</span></code> configuration, falling back to copier defaults when <code class="docutils literal notranslate"><span class="pre">source_dir</span></code> is provided.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">load_copier_config(source_dir)</span></code> — load <code class="docutils literal notranslate"><span class="pre">.copier-answers.yaml</span></code> from a directory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">copier_defaults(copier_config)</span></code> — derive <code class="docutils literal notranslate"><span class="pre">present</span></code>/<code class="docutils literal notranslate"><span class="pre">absent</span></code> patterns from copier answers.</p></li>
