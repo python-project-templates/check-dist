@@ -798,6 +798,7 @@ class TestCopierDefaults:
 
     def test_common_patterns_present(self):
         cfg = copier_defaults({"add_extension": "cpp", "project_name": "foo"})
+        assert cfg is not None
         assert "LICENSE" in cfg["sdist"]["present"]
         assert "pyproject.toml" in cfg["sdist"]["present"]
         assert ".copier-answers.yaml" in cfg["sdist"]["absent"]
