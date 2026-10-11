@@ -39,6 +39,7 @@ develop = [
     "codespell",
     "hatchling",
     "mdformat",
+    "mdformat-frontmatter",
     "mdformat-tables>=1",
     "pytest",
     "pytest-cov",
@@ -108,7 +109,7 @@ absent = [
 [tool.coverage.run]
 branch = true
 omit = [
-    "check_dist/tests/integration/",
+    "check_dist/tests/integration/*",
 ]
 
 [tool.coverage.report]

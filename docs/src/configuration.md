@@ -20,10 +20,10 @@ python -m check_dist._cli
 ## How it works
 
 1. **Build** — `check-dist` builds an sdist and a wheel using [build](https://pypi.org/project/build/).
-2. **List** — It lists every file inside each archive.
-3. **VCS comparison** — For the sdist, it compares the contents against files tracked by version control (currently git), taking into account any `[tool.hatch.build.targets.sdist]` configuration in `pyproject.toml`.
-4. **Present / absent checks** — It verifies that files matching your `present` patterns exist and files matching your `absent` patterns do not, for both the sdist and the wheel.
-5. **Platform extension checks** — It flags files that use a shared-library extension from another platform (e.g. a `.so` inside a Windows wheel).
+1. **List** — It lists every file inside each archive.
+1. **VCS comparison** — For the sdist, it compares the contents against files tracked by version control (currently git), taking into account any `[tool.hatch.build.targets.sdist]` configuration in `pyproject.toml`.
+1. **Present / absent checks** — It verifies that files matching your `present` patterns exist and files matching your `absent` patterns do not, for both the sdist and the wheel.
+1. **Platform extension checks** — It flags files that use a shared-library extension from another platform (e.g. a `.so` inside a Windows wheel).
 
 ## `pyproject.toml` configuration
 
@@ -31,17 +31,17 @@ All configuration lives under the `[tool.check-dist]` table, split into `sdist` 
 
 ### `[tool.check-dist.sdist]`
 
-| Key | Type | Description |
-| --- | --- | --- |
+| Key       | Type            | Description                                                  |
+| --------- | --------------- | ------------------------------------------------------------ |
 | `present` | list of strings | Patterns that **must** match at least one file in the sdist. |
-| `absent` | list of strings | Patterns that **must not** match any file in the sdist. |
+| `absent`  | list of strings | Patterns that **must not** match any file in the sdist.      |
 
 ### `[tool.check-dist.wheel]`
 
-| Key | Type | Description |
-| --- | --- | --- |
+| Key       | Type            | Description                                                  |
+| --------- | --------------- | ------------------------------------------------------------ |
 | `present` | list of strings | Patterns that **must** match at least one file in the wheel. |
-| `absent` | list of strings | Patterns that **must not** match any file in the wheel. |
+| `absent`  | list of strings | Patterns that **must not** match any file in the wheel.      |
 
 ### Example
 
@@ -82,13 +82,13 @@ absent = [
 
 Patterns in `present` and `absent` lists support several matching modes:
 
-| Pattern | Matches |
-| --- | --- |
-| `LICENSE` | A file named exactly `LICENSE` at any depth. |
-| `my_package` | Any file whose path starts with `my_package/` (directory match). |
-| `*.py` | Any file ending in `.py` (glob against the basename). |
+| Pattern           | Matches                                                                 |
+| ----------------- | ----------------------------------------------------------------------- |
+| `LICENSE`         | A file named exactly `LICENSE` at any depth.                            |
+| `my_package`      | Any file whose path starts with `my_package/` (directory match).        |
+| `*.py`            | Any file ending in `.py` (glob against the basename).                   |
 | `my_package/*.py` | `.py` files directly inside `my_package/` (glob against the full path). |
-| `.github` | Any file under `.github/`. |
+| `.github`         | Any file under `.github/`.                                              |
 
 Standard `fnmatch` wildcards are supported: `*`, `?`, `[seq]`, `[!seq]`.
 
@@ -96,12 +96,12 @@ Standard `fnmatch` wildcards are supported: `*`, `?`, `[seq]`, `[!seq]`.
 
 `check-dist` automatically translates shared-library extensions across platforms so you can write a single configuration that works everywhere.
 
-| Written in config | Linux | macOS | Windows |
-| --- | --- | --- | --- |
-| `*.so` | `*.so` | `*.so` | `*.pyd` |
-| `*.pyd` | `*.so` | `*.so` | `*.pyd` |
-| `*.dll` | `*.so` | `*.dylib` | `*.dll` |
-| `*.dylib` | `*.so` | `*.dylib` | `*.dll` |
+| Written in config | Linux  | macOS     | Windows |
+| ----------------- | ------ | --------- | ------- |
+| `*.so`            | `*.so` | `*.so`    | `*.pyd` |
+| `*.pyd`           | `*.so` | `*.so`    | `*.pyd` |
+| `*.dll`           | `*.so` | `*.dylib` | `*.dll` |
+| `*.dylib`         | `*.so` | `*.dylib` | `*.dll` |
 
 In addition, if a file with a **wrong** extension for the current platform appears in a distribution (e.g. a `.so` file in a Windows wheel), `check-dist` will raise an error.
 
@@ -133,7 +133,7 @@ exclude = ["target"]
 
 This tells `check-dist` that the sdist should contain files from the listed paths, minus any excluded patterns.
 
-> **Note:** Hatchling force-includes VCS exclusion files (e.g. `.gitignore`) in sdists regardless of exclude rules.  Do not add `.gitignore` to your `absent` list for sdist checks.
+> **Note:** Hatchling force-includes VCS exclusion files (e.g. `.gitignore`) in sdists regardless of exclude rules. Do not add `.gitignore` to your `absent` list for sdist checks.
 
 ## Copier template defaults
 
@@ -177,7 +177,7 @@ options:
 
 The `--pre-built` flag is useful when you have an existing build pipeline
 that produces the sdist and wheel (e.g. projects with complex native
-toolchains like Rust + WASM or C++ + Emscripten).  Point it at the
+toolchains like Rust + WASM or C++ + Emscripten). Point it at the
 directory containing the `.tar.gz` and `.whl` files:
 
 ```bash
@@ -190,11 +190,11 @@ dist was produced and warn about the failed build.
 
 ### Exit codes
 
-| Code | Meaning |
-| --- | --- |
-| 0 | All checks passed. |
-| 1 | One or more checks failed. |
-| 2 | An unexpected error occurred (e.g. build failure, git not found). |
+| Code | Meaning                                                           |
+| ---- | ----------------------------------------------------------------- |
+| 0    | All checks passed.                                                |
+| 1    | One or more checks failed.                                        |
+| 2    | An unexpected error occurred (e.g. build failure, git not found). |
 
 ## Python API
 
@@ -210,7 +210,7 @@ for msg in messages:
 
 Key functions exposed from `check_dist`:
 
-- `check_dist(source_dir, *, no_isolation=False, verbose=False, pre_built=None)` — run all checks, returns `(bool, list[str])`.  Pass `pre_built="dist/"` to skip building.
+- `check_dist(source_dir, *, no_isolation=False, verbose=False, pre_built=None)` — run all checks, returns `(bool, list[str])`. Pass `pre_built="dist/"` to skip building.
 - `load_config(pyproject_path, *, source_dir=None)` — load `[tool.check-dist]` configuration, falling back to copier defaults when `source_dir` is provided.
 - `load_copier_config(source_dir)` — load `.copier-answers.yaml` from a directory.
 - `copier_defaults(copier_config)` — derive `present`/`absent` patterns from copier answers.
